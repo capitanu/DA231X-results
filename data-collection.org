@@ -1,0 +1,35 @@
+#+TITLE: Data Collection
+#+AUTHOR: Calin Capitanu
+#+DATE: Mon Apr 10 03:28:13 PM CEST 2023
+
+* Rust Ansi Term
+* Embedded HAL
+* Rust
+** rustc/library/core/tests/clone.rs
+*** all
+**** command
+hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/core --test-args test_clone_from --test-args test_borrowed_clone" "echo '// test' >> library/core/tests/clone.rs && warp test library/core/tests/clone.rs --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode ../rustc-library-core-tests-clone-modifications_all.org
+**** results
+| Command | Mean [s]      | Min [s] | Max [s] | Relative     |
+|---------+---------------+---------+---------+--------------|
+| =cargo= | 4.433 ± 0.041 |   4.351 |   4.474 | 21.14 ± 2.31 |
+| =warp=  | 0.210 ± 0.023 |   0.179 |   0.253 | 1.00         |
+*** test_clone_from
+**** command
+hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/core --test-args test_clone_from" "echo '// test' >> library/core/tests/clone.rs && warp test library/core/tests/clone.rs test_clone_from --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode ../rustc-library-core-tests-clone-modifications_test_clone_from.org
+**** results
+| Command | Mean [s]      | Min [s] | Max [s] | Relative     |
+|---------+---------------+---------+---------+--------------|
+| =cargo= | 4.727 ± 0.183 |   4.371 |   4.905 | 27.12 ± 3.74 |
+| =warp=  | 0.174 ± 0.023 |   0.144 |   0.216 | 1.00         |
+
+*** test_borrowed_clone
+**** command
+hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/core --test-args test_borrowed_clone" "echo '// test' >> library/core/tests/clone.rs && warp test library/core/tests/clone.rs test_clone_from --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode ../rustc-library-core-tests-clone-modifications_test_borrowed_clone.org
+**** results
+| Command | Mean [s]      | Min [s] | Max [s] | Relative      |
+|---------+---------------+---------+---------+---------------|
+| =cargo= | 6.459 ± 6.500 |   4.365 |  24.958 | 34.95 ± 35.32 |
+| =warp=  | 0.185 ± 0.017 |   0.164 |   0.210 | 1.00          |
+** rust/library/core/tests/macros.rs
+*** all

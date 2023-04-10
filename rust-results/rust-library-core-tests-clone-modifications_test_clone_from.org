@@ -1,0 +1,4 @@
+| Command                                                                                                                                                  | Mean [s]      | Min [s] | Max [s] | Relative     |
+|----------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+---------+---------+--------------|
+| =echo '// test' >> library/core/tests/clone.rs && ./x.py test library/core --test-args test_clone_from=                                                  | 4.727 ± 0.183 |   4.371 |   4.905 | 27.12 ± 3.74 |
+| =echo '// test' >> library/core/tests/clone.rs && warp test library/core/tests/clone.rs test_clone_from --public-store-metadata-url http://0.0.0.0:9000= | 0.174 ± 0.023 |   0.144 |   0.216 | 1.00         |
