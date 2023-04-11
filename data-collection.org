@@ -3,7 +3,53 @@
 #+DATE: Mon Apr 10 03:28:13 PM CEST 2023
 
 * Rust Ansi Term
+** rust-ansi-term/src/style.rs
+*** colour_serialization
+**** command
+hyperfine "echo '// test' >> src/style.rs && cargo test colour_serialization" "echo '// test' >> src/style.rs && warp test src/style.rs colour_serialization --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode tmp.org
+**** results
+*** colour_deserialization
+**** command
+hyperfine "echo '// test' >> src/style.rs && cargo test colour_deserialization" "echo '// test' >> src/style.rs && warp test src/style.rs colour_deserialization --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode tmp.org
+**** results
+*** style_serialization
+**** command
+hyperfine "echo '// test' >> src/style.rs && cargo test style_serialization" "echo '// test' >> src/style.rs && warp test src/style.rs style_serialization --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode tmp.org
+**** results
 * Embedded HAL
+** embedded-hal/embedded-can/src/id.rs
+*** standard_id_new
+**** command
+hyperfine "echo '// test' >> src/id.rs && cargo test standard_id_new" "echo '// test' >> src/id.rs && warp test embedded-can/src/id.rs standard_id_new --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode tmp.org
+**** results
+*** standard_id_new_out_of_range
+**** command
+hyperfine "echo '// test' >> src/id.rs && cargo test standard_id_new_out_of_range" "echo '// test' >> src/id.rs && warp test embedded-can/src/id.rs standard_id_new_out_of_range --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode tmp.org
+**** results
+*** standard_id_new_unchecked_out_of_range
+**** command
+hyperfine "echo '// test' >> src/id.rs && cargo test standard_id_new_unchecked_out_of_range" "echo '// test' >> src/id.rs && warp test embedded-can/src/id.rs standard_id_new_unchecked_out_of_range --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode tmp.org
+**** results
+*** extended_id_new
+**** command
+hyperfine "echo '// test' >> src/id.rs && cargo test extended_id_new" "echo '// test' >> src/id.rs && warp test embedded-can/src/id.rs extended_id_new --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode tmp.org
+**** results
+*** extended_id_new_out_of_range
+**** command
+hyperfine "echo '// test' >> src/id.rs && cargo test extended_id_new_out_of_range" "echo '// test' >> src/id.rs && warp test embedded-can/src/id.rs extended_id_new_out_of_range --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode tmp.org
+**** results
+*** extended_id_new_unchecked_out_of_range
+**** command
+hyperfine "echo '// test' >> src/id.rs && cargo test extended_id_new_unchecked_out_of_range" "echo '// test' >> src/id.rs && warp test embedded-can/src/id.rs extended_id_new_unchecked_out_of_range --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode tmp.org
+**** results
+*** get_standard_id_from_extended_id
+**** command
+hyperfine "echo '// test' >> src/id.rs && cargo test get_standard_id_from_extended_id" "echo '// test' >> src/id.rs && warp test embedded-can/src/id.rs get_standard_id_from_extended_id --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode tmp.org
+**** results
+*** cmp_id
+**** command
+hyperfine "echo '// test' >> src/id.rs && cargo test cmp_id" "echo '// test' >> src/id.rs && warp test embedded-can/src/id.rs cmp_id --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode tmp.org
+**** results
 * Rust
 ** rustc/library/core/tests/clone.rs
 *** all
@@ -33,3 +79,91 @@ hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/
 | =warp=  | 0.185 ± 0.017 |   0.164 |   0.210 | 1.00          |
 ** rust/library/core/tests/macros.rs
 *** all
+**** command
+hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/core --test-args assert_eq_trailing_comma --test-args assert_escape --test-args assert_ne_trailing_comma --test-args matches_leading_pipe" "echo '// test' >> library/core/tests/clone.rs && warp test library/core/tests/macros.rs --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode tmp.org
+**** results
+| Command | Mean [s]      | Min [s] | Max [s] | Relative     |
+|---------+---------------+---------+---------+--------------|
+| =cargo= | 4.460 ± 0.045 |   4.410 |   4.564 | 15.58 ± 0.53 |
+| =warp=  | 0.286 ± 0.009 |   0.280 |   0.311 | 1.00         |
+*** assert_eq_trailing_comma
+**** command
+hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/core --test-args assert_eq_trailing_comma" "echo '// test' >> library/core/tests/clone.rs && warp test library/core/tests/macros.rs assert_eq_trailing_comma --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode tmp.org
+**** results
+| Command | Mean [s]      | Min [s] | Max [s] | Relative     |
+|---------+---------------+---------+---------+--------------|
+| =cargo= | 4.423 ± 0.028 |   4.364 |   4.462 | 25.72 ± 3.86 |
+| =warp=  | 0.172 ± 0.026 |   0.137 |   0.221 | 1.00         |
+*** assert_escape
+**** command
+hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/core --test-args assert_escape" "echo '// test' >> library/core/tests/clone.rs && warp test library/core/tests/macros.rs assert_escape --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode tmp.org
+**** results
+| Command | Mean [s]      | Min [s] | Max [s] | Relative     |
+|---------+---------------+---------+---------+--------------|
+| =cargo= | 4.431 ± 0.029 |   4.385 |   4.483 | 25.42 ± 2.89 |
+| =warp=  | 0.174 ± 0.020 |   0.142 |   0.218 | 1.00         |
+*** assert_ne_trailing_comma
+**** command
+hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/core --test-args assert_ne_trailing_comma" "echo '// test' >> library/core/tests/clone.rs && warp test library/core/tests/macros.rs assert_ne_trailing_comma --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode tmp.org
+**** results
+| Command | Mean [s]      | Min [s] | Max [s] | Relative     |
+|---------+---------------+---------+---------+--------------|
+| =cargo= | 4.421 ± 0.034 |   4.362 |   4.483 | 26.21 ± 3.85 |
+| =warp=  | 0.169 ± 0.025 |   0.148 |   0.235 | 1.00         |
+*** matches_leading_pipe
+**** command
+hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/core --test-args matches_leading_pipe" "echo '// test' >> library/core/tests/clone.rs && warp test library/core/tests/macros.rs matches_leading_pipe --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode tmp.org
+**** results
+| Command | Mean [s]      | Min [s] | Max [s] | Relative     |
+|---------+---------------+---------+---------+--------------|
+| =cargo= | 4.427 ± 0.030 |   4.382 |   4.475 | 23.42 ± 2.78 |
+| =warp=  | 0.189 ± 0.022 |   0.154 |   0.243 | 1.00         |
+** rustc/library/core/tests/tuple.rs
+*** all
+**** command
+hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/core --test-args test_clone --test-args test_partial_eq --test-args test_partial_ord --test-args test_ord --test-args test_show" "echo '// test' >> library/core/tests/clone.rs && warp test library/core/tests/tuple.rs --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode tmp.org
+**** results
+| Command | Mean [s]      | Min [s] | Max [s] | Relative     |
+|---------+---------------+---------+---------+--------------|
+| =cargo= | 4.427 ± 0.023 |   4.403 |   4.479 | 13.16 ± 0.50 |
+| =warp=  | 0.336 ± 0.013 |   0.318 |   0.355 | 1.00         |
+*** test_clone
+**** command
+hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/core --test-args test_clone" "echo '// test' >> library/core/tests/clone.rs && warp test library/core/tests/tuple.rs test_clone --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode tmp.org
+**** results
+| Command | Mean [s]      | Min [s] | Max [s] | Relative     |
+|---------+---------------+---------+---------+--------------|
+| =cargo= | 4.424 ± 0.026 |   4.395 |   4.467 | 24.89 ± 3.35 |
+| =warp=  | 0.178 ± 0.024 |   0.135 |   0.232 | 1.00         |
+*** test_partial_eq
+**** command
+hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/core --test-args test_partial_eq" "echo '// test' >> library/core/tests/clone.rs && warp test library/core/tests/tuple.rs test_partial_eq --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode tmp.org
+**** results
+| Command | Mean [s]      | Min [s] | Max [s] | Relative     |
+|---------+---------------+---------+---------+--------------|
+| =cargo= | 4.426 ± 0.024 |   4.384 |   4.454 | 23.74 ± 2.58 |
+| =warp=  | 0.186 ± 0.020 |   0.157 |   0.215 | 1.00         |
+*** test_partial_ord
+**** command
+hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/core --test-args test_partial_ord" "echo '// test' >> library/core/tests/clone.rs && warp test library/core/tests/tuple.rs test_partial_ord --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode tmp.org
+**** results
+| Command | Mean [s]      | Min [s] | Max [s] | Relative     |
+|---------+---------------+---------+---------+--------------|
+| =cargo= | 4.421 ± 0.034 |   4.367 |   4.471 | 23.94 ± 1.95 |
+| =warp=  | 0.185 ± 0.015 |   0.165 |   0.212 | 1.00         |
+*** test_ord
+**** command
+hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/core --test-args test_ord" "echo '// test' >> library/core/tests/clone.rs && warp test library/core/tests/tuple.rs test_ord --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode tmp.org
+**** results
+| Command | Mean [s]      | Min [s] | Max [s] | Relative     |
+|---------+---------------+---------+---------+--------------|
+| =cargo= | 4.422 ± 0.021 |   4.393 |   4.457 | 23.46 ± 2.31 |
+| =warp=  | 0.188 ± 0.019 |   0.167 |   0.227 | 1.00         |
+*** test_show
+**** command
+hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/core --test-args test_show" "echo '// test' >> library/core/tests/clone.rs && warp test library/core/tests/tuple.rs test_show --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode tmp.org
+**** results
+| Command | Mean [s]      | Min [s] | Max [s] | Relative     |
+|---------+---------------+---------+---------+--------------|
+| =cargo= | 4.452 ± 0.034 |   4.383 |   4.505 | 23.54 ± 1.94 |
+| =warp=  | 0.189 ± 0.016 |   0.165 |   0.213 | 1.00         |
