@@ -3,58 +3,500 @@
 #+DATE: Mon Apr 10 03:28:13 PM CEST 2023
 
 * Rust Ansi Term
-** rust-ansi-term/src/style.rs
+** src/style.rs
 *** colour_serialization
 **** command
-hyperfine "echo '// test' >> src/style.rs && cargo test colour_serialization" "echo '// test' >> src/style.rs && warp test src/style.rs colour_serialization --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode tmp.org
-**** results
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+	  "echo '// test' >> src/style.rs && \
+	  warp test \
+	  src/style.rs colour_serialization \
+	  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "echo '// test' >> src/style.rs && \
+	  cargo test colour_serialization --features derive_serde_style" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../org-data/rust-ansi-term_src-style_colour-serialization.org \
+	  --export-json ../json-data/rust-ansi-term_src-style_colour-serialization.json
+#+end_src
+**** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/rust-ansi-term_src-style_colour-serialization.json \
+		  --labels warp,cargo \
+		  -o plots/plot_whisker_rust-ansi-term_src-style_colour-serialization.png
+#+end_src
+**** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/rust-ansi-term_src-style_colour-serialization.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_rust-ansi-term_src-style_colour-serialization.png
+#+end_src
 *** colour_deserialization
 **** command
-hyperfine "echo '// test' >> src/style.rs && cargo test colour_deserialization" "echo '// test' >> src/style.rs && warp test src/style.rs colour_deserialization --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode tmp.org
-**** results
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+	  "echo '// test' >> src/style.rs && \
+	  warp test \
+	  src/style.rs colour_deserialization \
+	  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "echo '// test' >> src/style.rs && \
+	  cargo test colour_deserialization --features derive_serde_style" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../org-data/rust-ansi-term_src-style_colour-deserialization.org \
+	  --export-json ../json-data/rust-ansi-term_src-style_colour-deserialization.json
+#+end_src
+**** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/rust-ansi-term_src-style_colour-deserialization.json \
+		  --labels warp,cargo \
+		  -o  plots/plot_whisker_rust-ansi-term_src-style_colour-deserialization.png
+#+end_src
+**** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/rust-ansi-term_src-style_colour-deserialization.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_rust-ansi-term_src-style_colour-deserialization.png
+#+end_src
 *** style_serialization
 **** command
-hyperfine "echo '// test' >> src/style.rs && cargo test style_serialization" "echo '// test' >> src/style.rs && warp test src/style.rs style_serialization --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode tmp.org
-**** results
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+	  "echo '// test' >> src/style.rs && \
+	  warp test \
+	  src/style.rs style_serialization \
+	  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "echo '// test' >> src/style.rs && \
+	  cargo test style_serialization --features derive_serde_style" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../org-data/rust-ansi-term_src-style_style-serialization.org \
+	  --export-json ../json-data/rust-ansi-term_src-style_style-serialization.json
+#+end_src
+**** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/rust-ansi-term_src-style_style-serialization.json \
+		  --labels warp,cargo \
+		  -o  plots/plot_whisker_rust-ansi-term_src-style_style-serialization.png
+#+end_src
+**** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/rust-ansi-term_src-style_style-serialization.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_rust-ansi-term_src-style_style-serialization.png
+#+end_src
 * Embedded HAL
-** embedded-hal/embedded-can/src/id.rs
+** embedded-can/src/id.rs
 *** standard_id_new
 **** command
-hyperfine "echo '// test' >> src/id.rs && cargo test standard_id_new" "echo '// test' >> src/id.rs && warp test embedded-can/src/id.rs standard_id_new --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode tmp.org
-**** results
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+	  "echo '// test' >> src/id.rs && \		  
+	  warp test \
+	  src/id.rs standard_id_new \
+	  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "echo '// test' >> src/id.rs && \
+	  cargo test standard_id_new" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../../org-data/embedded_hal-embedded_can_src_id-standard_id_new.org \
+	  --export-json ../../json-data/embedded_hal-embedded_can_src_id-standard_id_new.json
+#+end_src
+**** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/embedded_hal-embedded_can_src_id-standard_id_new.json \
+		  --labels warp,cargo \
+		  -o  plots/plot_whisker_embedded_hal-embedded_can_src_id-standard_id_new.png
+#+end_src
+**** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/embedded_hal-embedded_can_src_id-standard_id_new.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_embedded_hal-embedded_can_src_id-standard_id_new.png
+#+end_src
 *** standard_id_new_out_of_range
 **** command
-hyperfine "echo '// test' >> src/id.rs && cargo test standard_id_new_out_of_range" "echo '// test' >> src/id.rs && warp test embedded-can/src/id.rs standard_id_new_out_of_range --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode tmp.org
-**** results
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+	  "echo '// test' >> src/id.rs && \
+	  warp test \
+	  src/id.rs standard_id_new_out_of_range \
+	  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "echo '// test' >> src/id.rs && \
+	  cargo test standard_id_new_out_of_range" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../../org-data/embedded_hal-embedded_can_src_id-standard_id_new_out_of_range.org \
+	  --export-json ../../json-data/embedded_hal-embedded_can_src_id-standard_id_new_out_of_range.json
+#+end_src
+**** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/embedded_hal-embedded_can_src_id-standard_id_new_out_of_range.json \
+		  --labels warp,cargo \
+		  -o  plots/plot_whisker_embedded_hal-embedded_can_src_id-standard_id_new_out_of_range.png
+#+end_src
+**** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/embedded_hal-embedded_can_src_id-standard_id_new_out_of_range.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_embedded_hal-embedded_can_src_id-standard_id_new_out_of_range.png
+#+end_src
 *** standard_id_new_unchecked_out_of_range
 **** command
-hyperfine "echo '// test' >> src/id.rs && cargo test standard_id_new_unchecked_out_of_range" "echo '// test' >> src/id.rs && warp test embedded-can/src/id.rs standard_id_new_unchecked_out_of_range --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode tmp.org
-**** results
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+	  "echo '// test' >> src/id.rs && \
+	  warp test \
+	  src/id.rs standard_id_new_unchecked_out_of_range \
+	  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "echo '// test' >> src/id.rs && \
+	  cargo test standard_id_new_unchecked_out_of_range" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../../org-data/embedded_hal-embedded_can_src_id-standard_id_new_unchecked_out_of_range.org \
+	  --export-json ../../json-data/embedded_hal-embedded_can_src_id-standard_id_new_unchecked_out_of_range.json
+#+end_src
+**** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/embedded_hal-embedded_can_src_id-standard_id_new_unchecked_out_of_range.json \
+		  --labels warp,cargo \
+		  -o  plots/plot_whisker_embedded_hal-embedded_can_src_id-standard_id_new_unchecked_out_of_range.png
+#+end_src
+**** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/embedded_hal-embedded_can_src_id-standard_id_new_unchecked_out_of_range.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_embedded_hal-embedded_can_src_id-standard_id_new_unchecked_out_of_range.png
+#+end_src
 *** extended_id_new
 **** command
-hyperfine "echo '// test' >> src/id.rs && cargo test extended_id_new" "echo '// test' >> src/id.rs && warp test embedded-can/src/id.rs extended_id_new --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode tmp.org
-**** results
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+	  "echo '// test' >> src/id.rs && \
+	  warp test \
+	  src/id.rs extended_id_new \
+	  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "echo '// test' >> src/id.rs && \
+	  cargo test extended_id_new" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../../org-data/embedded_hal-embedded_can_src_id-extended_id_new.org \
+	  --export-json ../../json-data/embedded_hal-embedded_can_src_id-extended_id_new.json
+#+end_src
+**** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/embedded_hal-embedded_can_src_id-extended_id_new.json \
+		  --labels warp,cargo \
+		  -o  plots/plot_whisker_embedded_hal-embedded_can_src_id-extended_id_new.png
+#+end_src
+**** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/embedded_hal-embedded_can_src_id-extended_id_new.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_embedded_hal-embedded_can_src_id-extended_id_new.png
+#+end_src
 *** extended_id_new_out_of_range
 **** command
-hyperfine "echo '// test' >> src/id.rs && cargo test extended_id_new_out_of_range" "echo '// test' >> src/id.rs && warp test embedded-can/src/id.rs extended_id_new_out_of_range --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode tmp.org
-**** results
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+	  "echo '// test' >> src/id.rs && \
+	  warp test \
+	  src/id.rs extended_id_new_out_of_range \
+	  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "echo '// test' >> src/id.rs && \
+	  cargo test extended_id_new_out_of_range" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../../org-data/embedded_hal-embedded_can_src_id-extended_id_new_out_of_range.org \
+	  --export-json ../../json-data/embedded_hal-embedded_can_src_id-extended_id_new_out_of_range.json
+#+end_src
+**** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/embedded_hal-embedded_can_src_id-extended_id_new_out_of_range.json \
+		  --labels warp,cargo \
+		  -o  plots/plot_whisker_embedded_hal-embedded_can_src_id-extended_id_new_out_of_range.png
+#+end_src
+**** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/embedded_hal-embedded_can_src_id-extended_id_new_out_of_range.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_embedded_hal-embedded_can_src_id-extended_id_new_out_of_range.png
+#+end_src
 *** extended_id_new_unchecked_out_of_range
 **** command
-hyperfine "echo '// test' >> src/id.rs && cargo test extended_id_new_unchecked_out_of_range" "echo '// test' >> src/id.rs && warp test embedded-can/src/id.rs extended_id_new_unchecked_out_of_range --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode tmp.org
-**** results
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+	  "echo '// test' >> src/id.rs && \
+	  warp test \
+	  src/id.rs extended_id_new_unchecked_out_of_range \
+	  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "echo '// test' >> src/id.rs && \
+	  cargo test extended_id_new_unchecked_out_of_range" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../../org-data/embedded_hal-embedded_can_src_id-extended_id_new_unchecked_out_of_range.org \
+	  --export-json ../../json-data/embedded_hal-embedded_can_src_id-extended_id_new_unchecked_out_of_range.json
+#+end_src
+**** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/embedded_hal-embedded_can_src_id-extended_id_new_unchecked_out_of_range.json \
+		  --labels warp,cargo \
+		  -o  plots/plot_whisker_embedded_hal-embedded_can_src_id-extended_id_new_unchecked_out_of_range.png
+#+end_src
+**** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/embedded_hal-embedded_can_src_id-extended_id_new_unchecked_out_of_range.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_embedded_hal-embedded_can_src_id-extended_id_new_unchecked_out_of_range.png
+#+end_src
 *** get_standard_id_from_extended_id
 **** command
-hyperfine "echo '// test' >> src/id.rs && cargo test get_standard_id_from_extended_id" "echo '// test' >> src/id.rs && warp test embedded-can/src/id.rs get_standard_id_from_extended_id --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode tmp.org
-**** results
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+	  "echo '// test' >> src/id.rs && \
+	  warp test \
+	  src/id.rs get_standard_id_from_extended_id \
+	  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "echo '// test' >> src/id.rs && \
+	  cargo test get_standard_id_from_extended_id" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../../org-data/embedded_hal-embedded_can_src_id-get_standard_id_from_extended_id.org \
+	  --export-json ../../json-data/embedded_hal-embedded_can_src_id-get_standard_id_from_extended_id.json
+#+end_src
+**** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/embedded_hal-embedded_can_src_id-get_standard_id_from_extended_id.json \
+		  --labels warp,cargo \
+		  -o  plots/plot_whisker_embedded_hal-embedded_can_src_id-get_standard_id_from_extended_id.png
+#+end_src
+**** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/embedded_hal-embedded_can_src_id-get_standard_id_from_extended_id.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_embedded_hal-embedded_can_src_id-get_standard_id_from_extended_id.png
+#+end_src
 *** cmp_id
 **** command
-hyperfine "echo '// test' >> src/id.rs && cargo test cmp_id" "echo '// test' >> src/id.rs && warp test embedded-can/src/id.rs cmp_id --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode tmp.org
-**** results
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+	  "echo '// test' >> src/id.rs && \
+	  warp test \
+	  src/id.rs cmp_id \
+	  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "echo '// test' >> src/id.rs && \
+	  cargo test cmp_id" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../../org-data/embedded_hal-embedded_can_src_id-cmp_id.org \
+	  --export-json ../../json-data/embedded_hal-embedded_can_src_id-cmp_id.json
+#+end_src
+**** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/embedded_hal-embedded_can_src_id-cmp_id.json \
+		  --labels warp,cargo \
+		  -o  plots/plot_whisker_embedded_hal-embedded_can_src_id-cmp_id.png
+#+end_src
+**** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/embedded_hal-embedded_can_src_id-cmp_id.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_embedded_hal-embedded_can_src_id-cmp_id.png
+#+end_src
+* Cargo
+** src/cargo/util/io.rs
+*** under_the_limit
+**** command
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+  "echo '// test' >> src/cargo/util/io.rs && \
+  warp test \
+  src/cargo/util/io.rs under_the_limit \
+  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "echo '// test' >> src/thread_local.rs && \
+  cargo test under_the_limit" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../org-data/cargo-src_cargo_util_io_rs-under_the_limit.org \
+	  --export-json ../json-data/cargo-src_cargo_util_io_rs-under_the_limit.json
+#+end_src
+**** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/cargo-src_cargo_util_io_rs-under_the_limit.json \
+		  --labels warp,cargo \
+		  -o plots/plot_whisker_cargo-src_cargo_util_io_rs-under_the_limit.png
+#+end_src
+**** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/cargo-src_cargo_util_io_rs-under_the_limit.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_cargo-src_cargo_util_io_rs-under_the_limit.png
+#+end_src
+*** over_the_limit
+**** command
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+  "echo '// test' >> src/cargo/util/io.rs && \
+  warp test \
+  src/cargo/util/io.rs over_the_limit \
+  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "echo '// test' >> src/thread_local.rs && \
+  cargo test over_the_limit" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../org-data/cargo-src_cargo_util_io_rs-over_the_limit.org \
+	  --export-json ../json-data/cargo-src_cargo_util_io_rs-over_the_limit.json
+#+end_src
+**** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/cargo-src_cargo_util_io_rs-over_the_limit.json \
+		  --labels warp,cargo \
+		  -o plots/plot_whisker_cargo-src_cargo_util_io_rs-over_the_limit.png
+#+end_src
+**** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/cargo-src_cargo_util_io_rs-over_the_limit.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_cargo-src_cargo_util_io_rs-over_the_limit.png
+#+end_src
+* Rust Cmd Lib
+** src/thread_local.rs
+*** test_proc_var_u32
+**** command
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+  "echo '// test' >> src/thread_local.rs && \
+  warp test \
+  src/thread_local.rs test_proc_var_u32 \
+  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "echo '// test' >> src/thread_local.rs && \
+  cargo test test_proc_var_u32" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../org-data/rust_cmd_lib-src_thread_local_rs-test_proc_var_u32.org \
+	  --export-json ../json-data/rust_cmd_lib-src_thread_local_rs-test_proc_var_u32.json
+#+end_src
+**** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/rust_cmd_lib-src_thread_local_rs-test_proc_var_u32.json \
+		  --labels warp,cargo \
+		  -o plots/plot_whisker_rust_cmd_lib-src_thread_local_rs-test_proc_var_u32.png
+#+end_src
+**** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/rust_cmd_lib-src_thread_local_rs-test_proc_var_u32.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_rust_cmd_lib-src_thread_local_rs-test_proc_var_u32.png
+#+end_src
+*** test_proc_var_map
+**** command
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+  "echo '// test' >> src/thread_local.rs && \
+  warp test \
+  src/thread_local.rs test_proc_var_map \
+  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "echo '// test' >> src/thread_local.rs && \
+  cargo test test_proc_var_map" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../org-data/rust_cmd_lib-src_thread_local_rs-test_proc_var_map.org \
+	  --export-json ../json-data/rust_cmd_lib-src_thread_local_rs-test_proc_var_map.json
+#+end_src
+**** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/rust_cmd_lib-src_thread_local_rs-test_proc_var_map.json \
+		  --labels warp,cargo \
+		  -o plots/plot_whisker_rust_cmd_lib-src_thread_local_rs-test_proc_var_map.png
+#+end_src
+**** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/rust_cmd_lib-src_thread_local_rs-test_proc_var_map.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_rust_cmd_lib-src_thread_local_rs-test_proc_var_map.png
+#+end_src
+*** test_proc_var_vec
+**** command
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+  "echo '// test' >> src/thread_local.rs && \
+  warp test \
+  src/thread_local.rs test_proc_var_vec \
+  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "echo '// test' >> src/thread_local.rs && \
+  cargo test test_proc_var_vec" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../org-data/rust_cmd_lib-src_thread_local_rs-test_proc_var_vec.org \
+	  --export-json ../json-data/rust_cmd_lib-src_thread_local_rs-test_proc_var_vec.json
+#+end_src
+**** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/rust_cmd_lib-src_thread_local_rs-test_proc_var_vec.json \
+		  --labels warp,cargo \
+		  -o plots/plot_whisker_rust_cmd_lib-src_thread_local_rs-test_proc_var_vec.png
+#+end_src
+**** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/rust_cmd_lib-src_thread_local_rs-test_proc_var_vec.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_rust_cmd_lib-src_thread_local_rs-test_proc_var_vec.png
+#+end_src
 * Rust
-** rustc/library/core/tests/clone.rs
+** rust/library/core/tests/clone.rs
 *** all
 **** command
-hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/core --test-args test_clone_from --test-args test_borrowed_clone" "echo '// test' >> library/core/tests/clone.rs && warp test library/core/tests/clone.rs --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode ../rustc-library-core-tests-clone-modifications_all.org
+#+begin_src sh
+hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/core --test-args test_clone_from --test-args test_borrowed_clone" "echo '// test' >> library/core/tests/clone.rs && warp test library/core/tests/clone.rs --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" --runs 10 --export-orgmode ../rustc-library-core-tests-clone-modifications_all.org
+#+end_src
 **** results
 | Command | Mean [s]      | Min [s] | Max [s] | Relative     |
 |---------+---------------+---------+---------+--------------|
@@ -62,16 +504,19 @@ hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/
 | =warp=  | 0.210 ± 0.023 |   0.179 |   0.253 | 1.00         |
 *** test_clone_from
 **** command
-hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/core --test-args test_clone_from" "echo '// test' >> library/core/tests/clone.rs && warp test library/core/tests/clone.rs test_clone_from --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode ../rustc-library-core-tests-clone-modifications_test_clone_from.org
+#+begin_src sh
+hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/core --test-args test_clone_from" "echo '// test' >> library/core/tests/clone.rs && warp test library/core/tests/clone.rs test_clone_from --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" --runs 10 --export-orgmode ../rustc-library-core-tests-clone-modifications_test_clone_from.org
+#+end_src
 **** results
 | Command | Mean [s]      | Min [s] | Max [s] | Relative     |
 |---------+---------------+---------+---------+--------------|
 | =cargo= | 4.727 ± 0.183 |   4.371 |   4.905 | 27.12 ± 3.74 |
 | =warp=  | 0.174 ± 0.023 |   0.144 |   0.216 | 1.00         |
-
 *** test_borrowed_clone
 **** command
-hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/core --test-args test_borrowed_clone" "echo '// test' >> library/core/tests/clone.rs && warp test library/core/tests/clone.rs test_clone_from --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode ../rustc-library-core-tests-clone-modifications_test_borrowed_clone.org
+#+begin_src sh
+hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/core --test-args test_borrowed_clone" "echo '// test' >> library/core/tests/clone.rs && warp test library/core/tests/clone.rs test_clone_from --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" --runs 10 --export-orgmode ../rustc-library-core-tests-clone-modifications_test_borrowed_clone.org
+#+end_src
 **** results
 | Command | Mean [s]      | Min [s] | Max [s] | Relative      |
 |---------+---------------+---------+---------+---------------|
@@ -80,7 +525,9 @@ hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/
 ** rust/library/core/tests/macros.rs
 *** all
 **** command
-hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/core --test-args assert_eq_trailing_comma --test-args assert_escape --test-args assert_ne_trailing_comma --test-args matches_leading_pipe" "echo '// test' >> library/core/tests/clone.rs && warp test library/core/tests/macros.rs --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode tmp.org
+#+begin_src sh
+hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/core --test-args assert_eq_trailing_comma --test-args assert_escape --test-args assert_ne_trailing_comma --test-args matches_leading_pipe" "echo '// test' >> library/core/tests/clone.rs && warp test library/core/tests/macros.rs --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" --runs 10 --export-orgmode tmp.org
+#+end_src
 **** results
 | Command | Mean [s]      | Min [s] | Max [s] | Relative     |
 |---------+---------------+---------+---------+--------------|
@@ -88,7 +535,9 @@ hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/
 | =warp=  | 0.286 ± 0.009 |   0.280 |   0.311 | 1.00         |
 *** assert_eq_trailing_comma
 **** command
-hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/core --test-args assert_eq_trailing_comma" "echo '// test' >> library/core/tests/clone.rs && warp test library/core/tests/macros.rs assert_eq_trailing_comma --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode tmp.org
+#+begin_src sh
+hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/core --test-args assert_eq_trailing_comma" "echo '// test' >> library/core/tests/clone.rs && warp test library/core/tests/macros.rs assert_eq_trailing_comma --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" --runs 10 --export-orgmode tmp.org
+#+end_src
 **** results
 | Command | Mean [s]      | Min [s] | Max [s] | Relative     |
 |---------+---------------+---------+---------+--------------|
@@ -96,7 +545,9 @@ hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/
 | =warp=  | 0.172 ± 0.026 |   0.137 |   0.221 | 1.00         |
 *** assert_escape
 **** command
-hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/core --test-args assert_escape" "echo '// test' >> library/core/tests/clone.rs && warp test library/core/tests/macros.rs assert_escape --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode tmp.org
+#+begin_src sh
+hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/core --test-args assert_escape" "echo '// test' >> library/core/tests/clone.rs && warp test library/core/tests/macros.rs assert_escape --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" --runs 10 --export-orgmode tmp.org
+#+end_src
 **** results
 | Command | Mean [s]      | Min [s] | Max [s] | Relative     |
 |---------+---------------+---------+---------+--------------|
@@ -104,7 +555,9 @@ hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/
 | =warp=  | 0.174 ± 0.020 |   0.142 |   0.218 | 1.00         |
 *** assert_ne_trailing_comma
 **** command
-hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/core --test-args assert_ne_trailing_comma" "echo '// test' >> library/core/tests/clone.rs && warp test library/core/tests/macros.rs assert_ne_trailing_comma --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode tmp.org
+#+begin_src sh
+hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/core --test-args assert_ne_trailing_comma" "echo '// test' >> library/core/tests/clone.rs && warp test library/core/tests/macros.rs assert_ne_trailing_comma --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" --runs 10 --export-orgmode tmp.org
+#+end_src
 **** results
 | Command | Mean [s]      | Min [s] | Max [s] | Relative     |
 |---------+---------------+---------+---------+--------------|
@@ -112,16 +565,20 @@ hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/
 | =warp=  | 0.169 ± 0.025 |   0.148 |   0.235 | 1.00         |
 *** matches_leading_pipe
 **** command
-hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/core --test-args matches_leading_pipe" "echo '// test' >> library/core/tests/clone.rs && warp test library/core/tests/macros.rs matches_leading_pipe --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode tmp.org
+#+begin_src sh
+hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/core --test-args matches_leading_pipe" "echo '// test' >> library/core/tests/clone.rs && warp test library/core/tests/macros.rs matches_leading_pipe --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" --runs 10 --export-orgmode tmp.org
+#+end_src
 **** results
 | Command | Mean [s]      | Min [s] | Max [s] | Relative     |
 |---------+---------------+---------+---------+--------------|
 | =cargo= | 4.427 ± 0.030 |   4.382 |   4.475 | 23.42 ± 2.78 |
 | =warp=  | 0.189 ± 0.022 |   0.154 |   0.243 | 1.00         |
-** rustc/library/core/tests/tuple.rs
+** rust/library/core/tests/tuple.rs
 *** all
 **** command
-hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/core --test-args test_clone --test-args test_partial_eq --test-args test_partial_ord --test-args test_ord --test-args test_show" "echo '// test' >> library/core/tests/clone.rs && warp test library/core/tests/tuple.rs --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode tmp.org
+#+begin_src sh
+hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/core --test-args test_clone --test-args test_partial_eq --test-args test_partial_ord --test-args test_ord --test-args test_show" "echo '// test' >> library/core/tests/clone.rs && warp test library/core/tests/tuple.rs --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" --runs 10 --export-orgmode tmp.org
+#+end_src
 **** results
 | Command | Mean [s]      | Min [s] | Max [s] | Relative     |
 |---------+---------------+---------+---------+--------------|
@@ -129,7 +586,9 @@ hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/
 | =warp=  | 0.336 ± 0.013 |   0.318 |   0.355 | 1.00         |
 *** test_clone
 **** command
-hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/core --test-args test_clone" "echo '// test' >> library/core/tests/clone.rs && warp test library/core/tests/tuple.rs test_clone --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode tmp.org
+#+begin_src sh
+hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/core --test-args test_clone" "echo '// test' >> library/core/tests/clone.rs && warp test library/core/tests/tuple.rs test_clone --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" --runs 10 --export-orgmode tmp.org
+#+end_src
 **** results
 | Command | Mean [s]      | Min [s] | Max [s] | Relative     |
 |---------+---------------+---------+---------+--------------|
@@ -137,7 +596,9 @@ hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/
 | =warp=  | 0.178 ± 0.024 |   0.135 |   0.232 | 1.00         |
 *** test_partial_eq
 **** command
-hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/core --test-args test_partial_eq" "echo '// test' >> library/core/tests/clone.rs && warp test library/core/tests/tuple.rs test_partial_eq --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode tmp.org
+#+begin_src sh
+hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/core --test-args test_partial_eq" "echo '// test' >> library/core/tests/clone.rs && warp test library/core/tests/tuple.rs test_partial_eq --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" --runs 10 --export-orgmode tmp.org
+#+end_src
 **** results
 | Command | Mean [s]      | Min [s] | Max [s] | Relative     |
 |---------+---------------+---------+---------+--------------|
@@ -145,7 +606,9 @@ hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/
 | =warp=  | 0.186 ± 0.020 |   0.157 |   0.215 | 1.00         |
 *** test_partial_ord
 **** command
-hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/core --test-args test_partial_ord" "echo '// test' >> library/core/tests/clone.rs && warp test library/core/tests/tuple.rs test_partial_ord --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode tmp.org
+#+begin_src sh
+hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/core --test-args test_partial_ord" "echo '// test' >> library/core/tests/clone.rs && warp test library/core/tests/tuple.rs test_partial_ord --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" --runs 10 --export-orgmode tmp.org
+#+end_src
 **** results
 | Command | Mean [s]      | Min [s] | Max [s] | Relative     |
 |---------+---------------+---------+---------+--------------|
@@ -153,7 +616,9 @@ hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/
 | =warp=  | 0.185 ± 0.015 |   0.165 |   0.212 | 1.00         |
 *** test_ord
 **** command
-hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/core --test-args test_ord" "echo '// test' >> library/core/tests/clone.rs && warp test library/core/tests/tuple.rs test_ord --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode tmp.org
+#+begin_src sh
+hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/core --test-args test_ord" "echo '// test' >> library/core/tests/clone.rs && warp test library/core/tests/tuple.rs test_ord --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" --runs 10 --export-orgmode tmp.org
+#+end_src
 **** results
 | Command | Mean [s]      | Min [s] | Max [s] | Relative     |
 |---------+---------------+---------+---------+--------------|
@@ -161,9 +626,12 @@ hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/
 | =warp=  | 0.188 ± 0.019 |   0.167 |   0.227 | 1.00         |
 *** test_show
 **** command
-hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/core --test-args test_show" "echo '// test' >> library/core/tests/clone.rs && warp test library/core/tests/tuple.rs test_show --public-store-metadata-url http://0.0.0.0:9000" --runs 10 --export-orgmode tmp.org
+#+begin_src sh
+hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/core --test-args test_show" "echo '// test' >> library/core/tests/clone.rs && warp test library/core/tests/tuple.rs test_show --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" --runs 10 --export-orgmode tmp.org
+#+end_src
 **** results
 | Command | Mean [s]      | Min [s] | Max [s] | Relative     |
 |---------+---------------+---------+---------+--------------|
 | =cargo= | 4.452 ± 0.034 |   4.383 |   4.505 | 23.54 ± 1.94 |
 | =warp=  | 0.189 ± 0.016 |   0.165 |   0.213 | 1.00         |
+
