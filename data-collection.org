@@ -97,7 +97,7 @@
 * Embedded HAL
 ** embedded-can/src/id.rs
 *** standard_id_new
-**** command
+**** command BAD
 #+begin_src sh
   hyperfine \
 	  --command-name warp \
@@ -127,7 +127,7 @@
 		  -o plots/plot_hist_embedded_hal-embedded_can_src_id-standard_id_new.png
 #+end_src
 *** standard_id_new_out_of_range
-**** command
+**** command BAD
 #+begin_src sh
   hyperfine \
 	  --command-name warp \
@@ -157,7 +157,7 @@
 		  -o plots/plot_hist_embedded_hal-embedded_can_src_id-standard_id_new_out_of_range.png
 #+end_src
 *** standard_id_new_unchecked_out_of_range
-**** command
+**** command BAD
 #+begin_src sh
   hyperfine \
 	  --command-name warp \
@@ -187,7 +187,7 @@
 		  -o plots/plot_hist_embedded_hal-embedded_can_src_id-standard_id_new_unchecked_out_of_range.png
 #+end_src
 *** extended_id_new
-**** command
+**** command BAD
 #+begin_src sh
   hyperfine \
 	  --command-name warp \
@@ -217,7 +217,7 @@
 		  -o plots/plot_hist_embedded_hal-embedded_can_src_id-extended_id_new.png
 #+end_src
 *** extended_id_new_out_of_range
-**** command
+**** command BAD
 #+begin_src sh
   hyperfine \
 	  --command-name warp \
@@ -247,7 +247,7 @@
 		  -o plots/plot_hist_embedded_hal-embedded_can_src_id-extended_id_new_out_of_range.png
 #+end_src
 *** extended_id_new_unchecked_out_of_range
-**** command
+**** command BAD
 #+begin_src sh
   hyperfine \
 	  --command-name warp \
@@ -277,7 +277,7 @@
 		  -o plots/plot_hist_embedded_hal-embedded_can_src_id-extended_id_new_unchecked_out_of_range.png
 #+end_src
 *** get_standard_id_from_extended_id
-**** command
+**** command BAD
 #+begin_src sh
   hyperfine \
 	  --command-name warp \
@@ -307,7 +307,7 @@
 		  -o plots/plot_hist_embedded_hal-embedded_can_src_id-get_standard_id_from_extended_id.png
 #+end_src
 *** cmp_id
-**** command
+**** command BAD
 #+begin_src sh
   hyperfine \
 	  --command-name warp \
@@ -339,7 +339,7 @@
 * Cargo
 ** src/cargo/util/io.rs
 *** under_the_limit
-**** command
+**** command BAD
 #+begin_src sh
   hyperfine \
 	  --command-name warp \
@@ -490,6 +490,159 @@
 		  --labels warp,cargo --bins 100 --type barstacked \
 		  -o plots/plot_hist_rust_cmd_lib-src_thread_local_rs-test_proc_var_vec.png
 #+end_src
+* p003
+** src/lib.rs
+*** add_two_and_two
+**** command
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+  "echo '// test' >> src/lib.rs && \
+  warp test \
+  src/lib.rs add_two_and_two \
+  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "echo '// test' >> src/lib.rs && \
+  cargo test add_two_and_three" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../org-data/p003-src_lib_rs-add_two_and_two.org \
+	  --export-json ../json-data/p003-src_lib_rs-add_two_and_two.json
+#+end_src
+**** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/p003-src_lib_rs-add_two_and_two.json \
+		  --labels warp,cargo \
+		  -o plots/plot_whisker_p003-src_lib_rs-add_two_and_two.png
+#+end_src
+**** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/p003-src_lib_rs-add_two_and_two.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_p003-src_lib_rs-add_two_and_two.png
+#+end_src
+*** add_three_and_two
+**** command
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+  "echo '// test' >> src/lib.rs && \
+  warp test \
+  src/lib.rs add_three_and_two \
+  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "echo '// test' >> src/lib.rs && \
+  cargo test add_three_and_two" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../org-data/p003-src_lib_rs-add_three_and_two.org \
+	  --export-json ../json-data/p003-src_lib_rs-add_three_and_two.json
+#+end_src
+**** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/p003-src_lib_rs-add_three_and_two.json \
+		  --labels warp,cargo \
+		  -o plots/plot_whisker_p003-src_lib_rs-add_three_and_two.png
+#+end_src
+**** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/p003-src_lib_rs-add_three_and_two.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_p003-src_lib_rs-add_three_and_two.png
+#+end_src
+*** one_hundred
+**** command
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+  "echo '// test' >> src/lib.rs && \
+  warp test \
+  src/lib.rs one_hundred \
+  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "echo '// test' >> src/lib.rs && \
+  cargo test one_hundred" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../org-data/p003-src_lib_rs-one_hundred.org \
+	  --export-json ../json-data/p003-src_lib_rs-one_hundred.json
+#+end_src
+**** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/p003-src_lib_rs-one_hundred.json \
+		  --labels warp,cargo \
+		  -o plots/plot_whisker_p003-src_lib_rs-one_hundred.png
+#+end_src
+**** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/p003-src_lib_rs-one_hundred.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_p003-src_lib_rs-one_hundred.png
+#+end_src
+** src/point.rs
+*** test_point_distance
+**** command
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+  "echo '// test' >> src/point.rs && \
+  warp test \
+  src/lib.rs test_point_distance \
+  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "echo '// test' >> src/point.rs && \
+  cargo test test_point_distance" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../org-data/p003-src_point_rs-test_point_distance.org \
+	  --export-json ../json-data/p003-src_point_rs-test_point_distance.json
+#+end_src
+**** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/p003-src_point_rs-test_point_distance.json \
+		  --labels warp,cargo \
+		  -o plots/plot_whisker_p003-src_point_rs-test_point_distance.png
+#+end_src
+**** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/p003-src_point_rs-test_point_distance.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_p003-src_point_rs-test_point_distance.png
+#+end_src
+*** test_add
+**** command
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+  "echo '// test' >> src/point.rs && \
+  warp test \
+  src/lib.rs test_add \
+  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "echo '// test' >> src/point.rs && \
+  cargo test test_add" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../org-data/p003-src_point_rs-test_add.org \
+	  --export-json ../json-data/p003-src_point_rs-test_add.json
+#+end_src
+**** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/p003-src_point_rs-test_add.json \
+		  --labels warp,cargo \
+		  -o plots/plot_whisker_p003-src_point_rs-test_add.png
+#+end_src
+**** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/p003-src_point_rs-test_add.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_p003-src_point_rs-test_add.png
+#+end_src
 * Rust
 ** rust/library/core/tests/clone.rs
 *** all
@@ -634,4 +787,5 @@ hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/
 |---------+---------------+---------+---------+--------------|
 | =cargo= | 4.452 ± 0.034 |   4.383 |   4.505 | 23.54 ± 1.94 |
 | =warp=  | 0.189 ± 0.016 |   0.165 |   0.213 | 1.00         |
+
 
