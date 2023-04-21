@@ -17,22 +17,22 @@
 	  "echo '// test' >> src/style.rs && \
 	  cargo test colour_serialization --features derive_serde_style" \
 	  --warmup 50 --runs 100 \
-	  --export-orgmode ../org-data/rust-ansi-term_src-style_colour-serialization.org \
-	  --export-json ../json-data/rust-ansi-term_src-style_colour-serialization.json
+	  --export-orgmode ../org-data/rust_ansi_term-src_style-colour_serialization.org \
+	  --export-json ../json-data/rust_ansi_term-src_style-colour_serialization.json
 #+end_src
 **** plot whisker
 #+begin_src sh
   python3 plot_whisker.py \
-		  json-data/rust-ansi-term_src-style_colour-serialization.json \
+		  json-data/rust_ansi_term-src_style-colour_serialization.json \
 		  --labels warp,cargo \
-		  -o plots/plot_whisker_rust-ansi-term_src-style_colour-serialization.png
+		  -o plots/plot_whisker_rust_ansi_term-src_style-colour_serialization.png
 #+end_src
 **** plot histogram
 #+begin_src sh
   python3 plot_histogram.py \
-		  json-data/rust-ansi-term_src-style_colour-serialization.json \
+		  json-data/rust_ansi_term-src_style-colour_serialization.json \
 		  --labels warp,cargo --bins 100 --type barstacked \
-		  -o plots/plot_hist_rust-ansi-term_src-style_colour-serialization.png
+		  -o plots/plot_hist_rust_ansi_term-src_style-colour_serialization.png
 #+end_src
 *** colour_deserialization
 **** command
@@ -47,22 +47,22 @@
 	  "echo '// test' >> src/style.rs && \
 	  cargo test colour_deserialization --features derive_serde_style" \
 	  --warmup 50 --runs 100 \
-	  --export-orgmode ../org-data/rust-ansi-term_src-style_colour-deserialization.org \
-	  --export-json ../json-data/rust-ansi-term_src-style_colour-deserialization.json
+	  --export-orgmode ../org-data/rust_ansi_term-src_style-colour_deserialization.org \
+	  --export-json ../json-data/rust_ansi_term-src_style-colour_deserialization.json
 #+end_src
 **** plot whisker
 #+begin_src sh
   python3 plot_whisker.py \
-		  json-data/rust-ansi-term_src-style_colour-deserialization.json \
+		  json-data/rust_ansi_term-src_style-colour_deserialization.json \
 		  --labels warp,cargo \
-		  -o  plots/plot_whisker_rust-ansi-term_src-style_colour-deserialization.png
+		  -o  plots/plot_whisker_rust_ansi_term-src_style-colour_deserialization.png
 #+end_src
 **** plot histogram
 #+begin_src sh
   python3 plot_histogram.py \
-		  json-data/rust-ansi-term_src-style_colour-deserialization.json \
+		  json-data/rust_ansi_term-src_style-colour_deserialization.json \
 		  --labels warp,cargo --bins 100 --type barstacked \
-		  -o plots/plot_hist_rust-ansi-term_src-style_colour-deserialization.png
+		  -o plots/plot_hist_rust_ansi_term-src_style-colour_deserialization.png
 #+end_src
 *** style_serialization
 **** command
@@ -77,27 +77,27 @@
 	  "echo '// test' >> src/style.rs && \
 	  cargo test style_serialization --features derive_serde_style" \
 	  --warmup 50 --runs 100 \
-	  --export-orgmode ../org-data/rust-ansi-term_src-style_style-serialization.org \
-	  --export-json ../json-data/rust-ansi-term_src-style_style-serialization.json
+	  --export-orgmode ../org-data/rust_ansi_term-src_style-style_serialization.org \
+	  --export-json ../json-data/rust_ansi_term-src_style-style_serialization.json
 #+end_src
 **** plot whisker
 #+begin_src sh
   python3 plot_whisker.py \
-		  json-data/rust-ansi-term_src-style_style-serialization.json \
+		  json-data/rust_ansi_term-src_style-style_serialization.json \
 		  --labels warp,cargo \
-		  -o  plots/plot_whisker_rust-ansi-term_src-style_style-serialization.png
+		  -o  plots/plot_whisker_rust_ansi_term-src_style-style_serialization.png
 #+end_src
 **** plot histogram
 #+begin_src sh
   python3 plot_histogram.py \
-		  json-data/rust-ansi-term_src-style_style-serialization.json \
+		  json-data/rust_ansi_term-src_style-style_serialization.json \
 		  --labels warp,cargo --bins 100 --type barstacked \
-		  -o plots/plot_hist_rust-ansi-term_src-style_style-serialization.png
+		  -o plots/plot_hist_rust_ansi_term-src_style-style_serialization.png
 #+end_src
 * Embedded HAL
 ** embedded-can/src/id.rs
 *** standard_id_new
-**** command BAD
+**** command
 #+begin_src sh
   hyperfine \
 	  --command-name warp \
@@ -127,7 +127,7 @@
 		  -o plots/plot_hist_embedded_hal-embedded_can_src_id-standard_id_new.png
 #+end_src
 *** standard_id_new_out_of_range
-**** command BAD
+**** command
 #+begin_src sh
   hyperfine \
 	  --command-name warp \
@@ -157,7 +157,7 @@
 		  -o plots/plot_hist_embedded_hal-embedded_can_src_id-standard_id_new_out_of_range.png
 #+end_src
 *** standard_id_new_unchecked_out_of_range
-**** command BAD
+**** command
 #+begin_src sh
   hyperfine \
 	  --command-name warp \
@@ -187,7 +187,7 @@
 		  -o plots/plot_hist_embedded_hal-embedded_can_src_id-standard_id_new_unchecked_out_of_range.png
 #+end_src
 *** extended_id_new
-**** command BAD
+**** command
 #+begin_src sh
   hyperfine \
 	  --command-name warp \
@@ -217,7 +217,7 @@
 		  -o plots/plot_hist_embedded_hal-embedded_can_src_id-extended_id_new.png
 #+end_src
 *** extended_id_new_out_of_range
-**** command BAD
+**** command
 #+begin_src sh
   hyperfine \
 	  --command-name warp \
@@ -247,7 +247,7 @@
 		  -o plots/plot_hist_embedded_hal-embedded_can_src_id-extended_id_new_out_of_range.png
 #+end_src
 *** extended_id_new_unchecked_out_of_range
-**** command BAD
+**** command
 #+begin_src sh
   hyperfine \
 	  --command-name warp \
@@ -277,7 +277,7 @@
 		  -o plots/plot_hist_embedded_hal-embedded_can_src_id-extended_id_new_unchecked_out_of_range.png
 #+end_src
 *** get_standard_id_from_extended_id
-**** command BAD
+**** command
 #+begin_src sh
   hyperfine \
 	  --command-name warp \
@@ -307,7 +307,7 @@
 		  -o plots/plot_hist_embedded_hal-embedded_can_src_id-get_standard_id_from_extended_id.png
 #+end_src
 *** cmp_id
-**** command BAD
+**** command
 #+begin_src sh
   hyperfine \
 	  --command-name warp \
@@ -339,7 +339,7 @@
 * Cargo
 ** src/cargo/util/io.rs
 *** under_the_limit
-**** command BAD
+**** command
 #+begin_src sh
   hyperfine \
 	  --command-name warp \
@@ -590,7 +590,7 @@
 	  --command-name warp \
   "echo '// test' >> src/point.rs && \
   warp test \
-  src/lib.rs test_point_distance \
+  src/point.rs test_point_distance \
   --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
 	  --command-name cargo \
 	  "echo '// test' >> src/point.rs && \
@@ -620,7 +620,7 @@
 	  --command-name warp \
   "echo '// test' >> src/point.rs && \
   warp test \
-  src/lib.rs test_add \
+  src/point.rs test_add \
   --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
 	  --command-name cargo \
 	  "echo '// test' >> src/point.rs && \
