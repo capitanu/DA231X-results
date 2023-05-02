@@ -1,0 +1,2296 @@
+DEGREE PROJECT IN COMPUTER SCIENCE AND ENGINEERING,
+SECOND CYCLE, 30 CREDITS
+STOCKHOLM, SWEDEN 2021
+AutoGraphQL: An automated
+test generation tool for
+GraphQL
+LOUISE ZETTERLUND
+KTH ROYAL INSTITUTE OF TECHNOLOGY
+SCHOOL OF ELECTRICAL ENGINEERING AND COMPUTER SCIENCE
+
+AutoGraphQL: An automated
+test generation tool for
+GraphQL
+Louise Zetterlund
+Master’s Programme, Computer Science
+Date: June 30, 2021
+Supervisors: Deepika Tiwari, Magnus Nordlander
+Examiner: Benoit Baudry
+School of Electrical Engineering and Computer Science
+Host company: Redeye AB
+Swedish title: AutoGraphQL: ett automatiskt testgenererande
+verktyg för GraphQL
+© 2021 Louise Zetterlund
+Abstract | i
+Abstract
+This thesis presents a novel technique to automatically generate test cases that
+assess the implementation of a GraphQL API. The key conceptual foundation
+for this technique is to log end-user queries when the system is in production
+and to turn these actual usages of the API into test cases. These test cases aim
+at revealing ill-formed responses from the API. Hence, we rely on the API
+schema to automatically generate test oracles. We implemented the technique
+in a tool called AutoGraphQL and evaluated our approach with one industrial
+case study. We generate test cases for Frontapp, the system that manages the
+public web services of Redeye, a software company in Stockholm, Sweden.
+We have collected end-user queries on the Frontapp API for 33 days in 2021.
+Based on these queries and Frontapp’s GraphQL schema, AutoGraphQL
+generated 24, 049 unit tests, which test 231 dierent query types and include a
+total of 1.3M assertions. We ran all the test cases against the Frontapp API and
+observed that this test suite covers 30% of the code that implements the API
+and 47% of the schema. A total of 157 test cases fail, revealing the presence of
+errors in Frontapp. The analysis of the failed test cases confirms that all failing
+cases but two trigger actual bugs in the system. The two exceptions were due
+to a network error during the test execution and to a bug that was already fixed,
+which means that none of them were due to a defect in AutoGraphQL. Out of
+the 157 error messages, 19 were unique and connected to 8 distinct software
+defects. We show for the first time in the academic literature that it is feasible
+to turn actual production GraphQL queries into test cases that cover important
+parts of the code and the schema, and that are able to reveal actual defects in
+the system under test.
+In future work, more experiments are needed to confirm these results
+with other case studies. One could also investigate how to integrate this test
+generation technique into a complete DevOps pipeline. This includes test
+suite minimization and prioritization to use the most ecient test cases in a
+CI/CD pipeline. Redeye plans to implement AutoGraphQL with all of their
+applications using GraphQL as an API and add generated test cases to a CI/CD
+pipeline for that application.
+ii | Sammanfattning
+Sammanfattning
+Denna avhandling presenterar en ny teknik för att automatiskt generera testfall
+som testar implementeringen av ett GraphQL API. Den viktigaste grundläggande grunden för denna teknik är att logga användares GraphQL-frågor
+när systemet är i produktion och att omvandla dessa faktiska användningar av
+API:et till testfall. Dessa testfall strävar mot att upptäcka felaktigt utformade
+svar från API:et. Därför använder vi oss av API-schemat för att automatiskt
+generera testorakler. Vi implementerade tekniken i ett verktyg som heter
+AutoGraphQL och utvärderade metoden med en industriell fallstudie. Vi
+genererar testfall för Frontapp, systemet som hanterar de oentliga webbtjänsterna för Redeye, ett företag i Stockholm, Sverige. Vi loggade GraphQLfrågor från användare i Frontapp’s API i 33 dagar under 2021. Baserat
+på dessa frågor och Frontapps GraphQL-schema genererade AutoGraphQL
+24049 testfall, som testar 231 olika frågetyper och innehåller totalt 1,3 miljoner
+test påståenden. Vi exekverade alla testfall mot Frontapps API och observerade
+att denna testsvit täcker 30% av koden som implementerar API:et och 47%
+av GraphQL schemat. Totalt 157 testfall underkändes, vilket innebär att det
+förekommer buggar i Frontapp. Analysen av underkända testfall bekräftar att
+alla fall förutom två lokaliserar faktiska fel i systemet. De två undantagen
+berodde på ett nätverksfel under testkörningen och på ett fel som redan var
+fixat, vilket innebär att ingen av dem tydde på någon defekt i AutoGraphQL.
+Av 157 felmeddelanden var 19 unika och kopplade till 8 distinkta programvarufel. Vi visar för första gången i den akademiska litteraturen att det är möjligt
+att omvandla användarställda GraphQL-frågor till testfall som täcker viktiga
+delar av koden och schemat och som kan avslöja faktiska defekter i systemet
+som testas.
+I framtida arbete behövs fler experiment för att bekräfta dessa resultat
+med andra fallstudier. Ett framtida arbete kan undersöka hur man integrerar
+denna testgenereringsteknik i en komplett DevOps-pipeline. Detta inkluderar
+testfallsminimering och testfallsprioritering för att använda de mest eektiva
+testfallen i en CI / CD-pipeline. Redeye planerar att implementera
+AutoGraphQL i alla sina applikationer som använder GraphQL som API och
+att lägga till genererade testfall till en CI / CD-pipeline för den applikationen.
+Acknowledgements | iii
+Acknowledgements
+Throughout writing this thesis, I have received a great deal of support.
+I would first like to thank Redeye for their technical contribution. A special
+thank you to my supervisor at Redeye, Magnus Nordlander, for your guidance
+and help, provided both early morning and late evening. Your knowledge
+during the creation of AutoGraphQL has been priceless.
+I would also like to thank my esteemed examiner, Professor Benoit Baudry,
+for his invaluable advice and expertise. Your engagement and involvement in
+this thesis have been exceptional and highly appreciated.
+A big thanks to my unicorn of a supervisor, Deepika Tiwari. Your guidance
+and support have been extraordinary, and I do not know how this thesis would
+have ended without you. Thank you for always providing the assistance that
+I needed, for helping me to keep my enthusiasm and, frankly, my sanity.
+Apologies for all the extra work!
+It has been a privilege to work together with Benoit and Deepika, and
+together they have provided me with a perfect blend of insight and humor.
+To my partner in crime, Johanna Iivanainen: I may not have been allowed
+to write this thesis with you, but I most definitely would not have been able to
+do it without you. E för examen!
+In addition, I would like to thank my family and my friends for their
+continuous encouragement. A special thanks to my parents for their unwavering
+support, open doors, bubbly bottles, and filled fridges. They may not have
+understood a lot of my study, but I hope they understand how invaluable they
+have been.
+Finally, I would like to thank my rock, Joel Weidenmark, for his incredible
+patience during this period. Thank you for always listening to my excitement
+when I succeeded and my rants when I didn’t. Thank you for always
+understanding my stresses and my grumpiness. You have been amazing!
+Stockholm, June 2021
+Louise Zetterlund
+iv | Acknowledgements
+Contents
+1 Introduction 1
+1.1 Background ........................... 1
+1.1.1 Redeye ......................... 2
+1.2 Problem definition ....................... 2
+1.3 Research methodology ..................... 3
+1.4 Novelty & contribution ..................... 3
+1.5 Limitations ........................... 4
+1.6 Ethics & Sustainability ..................... 4
+1.7 Outline ............................. 4
+2 Background 6
+2.1 Web API ............................. 6
+2.2 GraphQL ............................ 7
+2.2.1 Concept ......................... 7
+2.2.2 Schema and Queries .................. 7
+2.2.3 Query execution .................... 12
+2.2.4 Command-Query Responsibility Segregation (CQRS) 13
+2.2.5 Challenges ....................... 13
+2.3 Software testing ......................... 14
+2.3.1 Key concepts ...................... 14
+2.3.2 Coverage metrics .................... 17
+2.3.3 Automated test execution ................ 17
+2.3.4 Automated test generation ............... 19
+2.4 Redeye .............................. 22
+2.4.1 What is Redeye? .................... 23
+2.4.2 Tech stack ........................ 23
+2.5 Conclusion ........................... 23
+v
+vi | CONTENTS
+3 AutoGraphQL 25
+3.1 Test generation principle .................... 25
+3.2 Overview ............................ 25
+3.3 Query logging .......................... 26
+3.4 Test generation ......................... 28
+3.4.1 Test input generation .................. 28
+3.4.2 Test oracle generation ................. 29
+3.5 Implementation ......................... 30
+4 Methodology 33
+4.1 Research questions ....................... 33
+4.2 Timeline ............................. 34
+4.3 Study subject .......................... 34
+4.3.1 Redeye API ....................... 35
+4.3.2 Schema ......................... 35
+4.3.3 Experimental setup ................... 35
+4.4 Protocol ............................. 35
+4.4.1 RQ1 ........................... 36
+4.4.2 RQ2 ........................... 36
+4.4.3 RQ3 ........................... 36
+4.4.4 RQ4 ........................... 36
+4.4.5 RQ5 ........................... 37
+5 Results 38
+5.1 RQ1 - Nature of errors in the system .............. 38
+5.2 RQ2 - Test characteristics .................... 39
+5.3 RQ3 - Coverage metrics ..................... 47
+5.4 RQ4 - Error findings ...................... 48
+5.5 RQ5 - Documented errors .................... 50
+6 Discussion 52
+6.1 Schema and code coverage ................... 52
+6.2 Failing test cases ........................ 53
+6.3 Privacy ............................. 54
+6.4 Execution time ......................... 54
+6.5 Tool integration ......................... 55
+6.6 Threats to validity ........................ 56
+Contents | vii
+7 Conclusions and Future work 58
+7.1 Conclusions ........................... 58
+7.2 Future work ........................... 59
+References 60
+viii | Contents
+Chapter 1
+Introduction
+1.1 Background
+Behind every successful web page, there is a hard-working web Application
+Programming Interface (API). It is like the spider in the world wide web,
+connecting devices to other devices, ensuring that data is sent and received
+correctly. However, no web API is the same, and there are many dierent
+technologies to use when creating a web API. One of the newer technologies
+is GraphQL, which was open-sourced in 2015 by Facebook [1]. GraphQL is
+a query language for APIs, which continues to become popular. In 2019, a
+study with almost 20, 000 participants showed that of the 40% that had used it,
+around 95% would use it again [2]. Ever since it was open-sourced, GraphQL’s
+popularity has increased both among developers [2] and applications using it
+as a web API [3]. Some of the reasons behind GraphQL’s success are the
+reduction in the size of data, compared to other API architectures [4], and its
+simplicity of use [5].
+However, there is no established practice of testing GraphQL
+implementations, and the dierent techniques that are currently used focus
+on manually written test cases. There do exist a few proposed automated test
+generation techniques. However, they either rely on existing test cases [6] or
+test input randomization [7], which might not be specific enough to find defects
+in some applications.
+In this thesis, we implement and evaluate an automated test generation
+tool, called AutoGraphQL, based on the GraphQL queries logged from the
+system under test, when it is in production. The system we are testing is called
+Frontapp and is the main system at Redeye, a company in Stockholm, Sweden.
+We generate a test suite for Frontapp based on logged queries, execute this test
+1
+2 | Introduction
+suite, and evaluate it in terms of the coverage achieved by the executed tests.
+1.1.1 Redeye
+Redeye 1 is an equity research and investment banking company based in
+Stockholm, Sweden. They develop and maintain multiple software systems for
+various purposes. The software has no existing automated tests. The primary
+system that is in focus in this study is Redeye’s website, called Frontapp.
+Frontapp has existed for 7+ years and contains, among other things, Redeye’s
+latest company articles. Frontapp is built in the PHP framework Symfony 2,
+and uses GraphQL 3 to implement its Web API. Except for the manual testing
+done in the system before big releases, the system is untested.
+1.2 Problem definition
+Redeye intends to add a test suite to their software, but the task keeps
+getting deferred in order to prioritize development tasks instead, resulting in
+a technical debt [8]. For Redeye to achieve some level of test coverage in
+their systems without investing a lot of eort from the developers, they can
+benefit from an automated test generation tool for their web APIs. However,
+despite the growing popularity of GraphQL, we have found only two solutions
+in the literature for such test generation tools. The first one by Vargas [6]
+needs existing test cases, which Frontapp does not have. The most recent
+tool proposed by Karlsson [7] is based on random generation, but since many
+queries in Frontapp take specific IDs as arguments, such a tool has a very low
+probability of generating valid arguments.
+This thesis investigates the current software defects in Frontapp, implements
+an automated test generation tool for its GraphQL API, and creates test cases
+using this tool, with the queries logged from Frontapp in production. The
+research questions addressed in this thesis are as under:
+RQ1: What is the nature of errors in Frontapp?
+RQ2: Is AutoGraphQL able to generate tests for Frontapp?
+RQ3: How much of the Frontapp code and schema are covered by the
+AutoGraphQL tests?
+RQ4: How many errors do the AutoGraphQL tests find in Frontapp?
+1https://www.redeye.se
+2https://symfony.com
+3https://graphql.org
+Introduction | 3
+RQ5: How many of the Frontapp errors documented in the data collection
+done for RQ1 are found?
+1.3 Research methodology
+The work for this thesis is carried out in three phases:
+1. Data collection
+In this phase, we collect data to investigate the nature of errors in
+Frontapp.
+2. Query logging and tool implementation
+This phase contains two distinct goals that occur concurrently. We
+implement our automated test generation tool. Meanwhile, we log the
+queries executed as end-users interact with Frontapp in production.
+3. Generation and execution of test cases
+The last phase is dedicated to the generation of test cases with our
+test generation tool, and the execution of the generated tests. We also
+calculate the code and schema coverage obtained from the execution of
+the generated tests against the codebase of Frontapp.
+1.4 Novelty & contribution
+Based on our findings about the nature of errors in Frontapp, we focus
+our test generation eorts towards its GraphQL API implementation. We
+present a novel technique to automatically generate relevant unit tests for
+GraphQL which does not require existing test cases [6], or rely on test input
+randomization [7]. The generation of tests is solely dependent on the queries
+observed in production. The generated test cases contain assertions based
+on the GraphQL schema defined in the application. We also introduce this
+technique implemented as an open-source tool called AutoGraphQL 4. We
+discuss how AutoGraphQL is used to generate test cases for Redeye’s system,
+Frontapp, and evaluate the performance of the generated tests on Frontapp.
+4https://github.com/louisezetterlund/autographql
+4 | Introduction
+1.5 Limitations
+The limitations of this project lie within the specific industrial case study, the
+chosen test quality metrics, and the type of generated test cases. Since this
+study focuses on generating test cases for testing field types in GraphQL, it
+does not look into testing other properties of GraphQL or other parts of the
+system. This thesis also does not include GraphQL mutations, or requests
+that modify data, but only queries which simply return the requested data.
+Moreover, the quality of the generated tests is evaluated on the basis of code
+coverage and schema coverage of the case study.
+1.6 Ethics & Sustainability
+A possible ethical concern that may arise is that, during the data collection
+phase, we track the open issues in the system that developers solve, as well as
+some additional data connected to these issues, such as error type, duration to
+resolution, description of the resolution, and commit identifier on GitHub. We
+do so in order to identify where in the system the defects lie, and to understand
+the nature of these defects. However, we assure the developers that we use this
+information purely to prioritize our test generation eort and not as a measure
+of developer productivity. A crucial ethical concern is related to the privacy
+of logging end-users’ interaction with the system in production. However, the
+logged data required for our test generation tool does not contain any userspecific information, and therefore does not pose a threat to user privacy.
+Finally, the project also addresses questions of sustainability, since a bettertested software product is more reliable and less resource-intensive to develop
+and maintain in the longer run.
+1.7 Outline
+Chapter 2 presents relevant background information for this thesis, by
+introducing Web APIs, GraphQL, key concepts of software testing, and
+automated test execution and generation. Chapter 3 presents AutoGraphQL,
+the automated test generation tool for GraphQL, implemented for this thesis.
+Chapter 4 presents the research methodology and describes how AutoGraphQL
+is used to answer our research questions. Chapter 5 presents the key results
+obtained from our data collection phase as well as from the evaluation of
+AutoGraphQL on our case study. Chapter 6 discusses the methodology, the
+Introduction | 5
+results, and potential threats to validity. Finally, chapter 7 concludes the thesis
+and suggests potential future work.
+Chapter 2
+Background
+This chapter provides background information for the key concepts of this
+thesis, namely web APIs, GraphQL, and software testing. Additionally, this
+chapter describes Redeye, the company where this thesis was conducted.
+2.1 Web API
+An Application Programming Interface, or API, defines the interactions
+between dierent software applications. A Web API is an API for web
+browsers and web servers. Web APIs are often used to exchange data between
+the frontend (or client) of an application and its backend (or server) through
+HTTP requests and responses. The requests are sent to specific endpoints set
+up by developers, and the response sent back is based on the parameters of the
+request and the permissions of the requesting entity. There are dierent ways
+to set up the API architecture. Some of the most used ones are SOAP, REST,
+and GraphQL.
+Simple Object Access Protocol (SOAP) is an XML-based protocol
+composed of an envelope tag, a body tag containing the request or response,
+and a header tag containing specified data [9]. SOAP is quite easy to consume
+and platform independent, but challenging to implement. Moreover, it has
+performance issues because it requires more bandwidth for data transfers [10].
+REST stands for Representational State Transfer. It was defined by Roy
+Fielding in his Ph.D. thesis [11], and is more widely used than SOAP. REST
+payloads can be formatted in XML, JSON, HTML, or as plain text. REST
+fetches data by sending requests that correspond to HTTP verbs (or methods),
+to specific endpoints constructed to provide data about a particular entity in the
+application [11]. REST is easy to read and can be quite lightweight, since it
+6
+Background | 7
+does not need the extra XML-tags that are required by SOAP. However, REST
+is tied to HTTP and point-to-point communication, which makes it less flexible
+[11].
+GraphQL is a graph inspired query language created by Facebook in 2012
+and open-sourced in 2015 [1]. Since its introduction, it has gained popularity
+and is used by many companies [3]. We discuss GraphQL in more detail in
+section 2.2.
+2.2 GraphQL
+This section describes GraphQL, a query language for web APIs.
+2.2.1 Concept
+GraphQL 1 is a graph-inspired query language for APIs created in 2012 by
+Facebook [1]. It was open-sourced in 2015, and is used by companies such
+as GitHub 2, Pinterest 3, and PayPal 4 [3]. A GraphQL service is created by
+defining types and their fields, and connecting them in a graph. The developer
+then creates resolvers for each type and each field of the type, in order to
+request and receive data connected to that field. These resolvers are designed
+to return a specific object or a list of objects, and the client can choose exactly
+how much data connected to the object(s) they require by specifying the fields.
+Compared to REST-based APIs, where an end-point often gives the client all
+existing data on one or more objects, GraphQL does not include any data that
+the client does not explicitly specify, which reduces the data sent in bytes by
+99% [4]. Studies also show that it is more ecient to use GraphQL than REST
+from a developer point of view, both among more experienced developers, as
+well as developers with experience in REST but not GraphQL [5].
+2.2.2 Schema and Queries
+A GraphQL API implementation starts with defining a schema in GraphQL’s
+schema language. This schema is a multi-graph [12] where nodes are objects
+which define types and contain a list with fields. The edges of the multi-graph
+appear when a type defines one of its fields as another object. Listing 2.1
+1https://graphql.org
+2https://github.com
+3https://www.pinterest.com
+4https://www.paypal.com
+8 | Background
+shows a GraphQL schema where two types and two queries are defined. The
+type Person contains fields for id, name, age, and pet. The fields id
+and age are of the type Int, and name is a String. All three have an
+exclamation mark after their type, which means that they can not be null. The
+field pet is a list of the type Pet defined below the Person type. Pet also
+contains non-nullable fields for id, name, and age. In the GraphQL schema
+language, Query is a reserved type, to define the entry points of the queries
+defined, i.e. endpoints to request data from. The query person accepts a nonnull id and returns the Person-object matching that id. Likewise, the query
+pet accepts a non-null id and returns the Pet-object matching that id. In
+addition to the stated fields in the schema, some meta fields can be requested
+as well [13]. One of them is __typename which returns the object type of
+the returned object. This is useful to ascertain which type is being returned by
+a query.
+1 % Type
+2 type Person {
+3 id: Int!
+4 name: String!
+5 age: Int!
+6 pet: [Pet]
+7 }
+8 % Type
+9 type Pet {
+10 id: Int!
+11 name: String!
+12 age: Int!
+13 }
+14 % Queries
+15 type Query {
+16 person(id: Int!): Person
+17 pet(id: Int!): Pet
+18 }
+Listing 2.1: A GraphQL schema with two types and two queries
+Listing 2.2 shows an example of how a client can use the query language of
+GraphQL. In the query PetNameAndAge, the client requests for the name
+and __typename of the Person with an id of 10, as well as the list of
+corresponding pet objects, including their name, age, and __typename.
+The argument in this query is the value of 10 for the id of the person.
+There may be multiple arguments in a GraphQL query. PetNameAndAge
+is the so-called operation name of the query and is only required when more
+than one query is defined at the same place in order to separate them [14].
+Background | 9
+One can liken this to a named function compared to an anonymous function,
+where the operation name is the function name. GraphQL encourages the use
+of operation names to simplify debugging and server-side logging.
+1 query PetNameAndAge{
+2 person(id: 10){
+3 name
+4 __typename
+5 pet {
+6 name
+7 age
+8 __typename
+9 }
+10 }
+11 }
+Listing 2.2: A GraphQL query
+Listing 2.3 shows the response to the query in listing 2.2. The name of
+the person with id 10 is M aria and the type is Person. The query returns a
+list with one Pet object that belongs to the person, as well as its name (Spot)
+and age (5). The response is in JSON and can therefore easily be parsed and
+deserialized. Moreover, it contains only the fields requested by the query.
+1 { " data ": {
+2 " person ": {
+3 " name ": " Maria ",
+4 " __typename ": " Person ",
+5 " pet": [{
+6 " name ": " Spot ",
+7 "age ": 5,
+8 " __typename ": " Pet "
+9 }]
+10 }
+11 }
+12 }
+Listing 2.3: The result of a GraphQL query
+In addition to object types and scalar types (such as Int, String, or
+Boolean), GraphQL also supports more abstract types such asinterfaces and
+unions. Interfaces define a base object which other object types can implement
+and add more data to, like in listing 2.4. Here the type Pet from listing 2.1
+is an interface which the types Cat and Dog implement and therefore inherit
+its fields (id, name, and age), while still adding some Dog-specific fields
+like breed or Cat-specific fields like livesLeft. When writing a query
+for an interface type one can specify which fields they require depending on
+10 | Background
+the kind of object being returned, as shown in listing 2.5. In this example, it
+is specified through an inline fragment that if the returning object is of type
+Dog, the response should also include breed and if it is of type Cat it should
+include livesLeft.
+Union queries are similar, except that the returning objects do not need
+to have anything in common. One example could be a search-query which
+returns all objects with a name that contains the letter "a", it could return both
+of the type Person and Pet. Therefore, one can specify when the returning
+object is of type Person, the field Pet should also be returned. Both union
+queries and interface queries use inline fragments, as seen in listing 2.5, to
+specify the required fields per specific object type.
+Background | 11
+1 % Type
+2 type Person {
+3 id: Int!
+4 name: String!
+5 age: Int!
+6 pet: [Pet]
+7 }
+8 % Interface
+9 interface Pet {
+10 id: Int!
+11 name: String!
+12 age: Int!
+13 }
+14
+15 % Types which implement the interface
+16 type Dog implements Pet {
+17 id: Int!
+18 name: String!
+19 age: Int!
+20 breed: String!
+21 }
+22
+23 type Cat implements Pet {
+24 id: Int!
+25 name: String!
+26 age: Int!
+27 livesLeft: Int!
+28 }
+29
+30 % Queries
+31 type Query {
+32 person(id: Int!): Person
+33 pet(id: Int!): Pet
+34 }
+Listing 2.4: A GraphQL schema with one interface, two types, and two queries
+12 | Background
+1 query PetNameAndAge{
+2 person(id: 10){
+3 name
+4 __typename
+5 pet {
+6 name
+7 age
+8 ... on Dog {
+9 breed
+10 }
+11 ... on Cat {
+12 livesLeft
+13 }
+14 __typename
+15 }
+16 }
+17 }
+Listing 2.5: A GraphQL query with inline fragment
+Another query type in GraphQL is fragments. This is a way of saving a
+specific set of fields in order to not repeat them in each query. For example,
+if one often requests name, age, and pet from the Person object in
+listing 2.1, one can declare a fragment containing these fields and therefore
+only needs to request the fragment.
+The study subject in this thesis only uses interfaces and inline fragments.
+2.2.3 Query execution
+Figure 2.1 shows an overview of what happens when a request is sent through
+the GraphQL API. The query is sent by a GraphQL client to the GraphQL
+endpoint (/graphql/ in this example). The query in the request is validated
+against the GraphQL schema. Next, the matching query is identified and
+the request executor executes the resolvers, fetching the corresponding data
+from the database of the application [15]. Each field is connected to a getter
+method, fetching that field. If the schema specifies that the field is an object,
+the underlying fields will be getter methods of that object. For example, in
+listing 2.2, the Person query returns an object with each existing field as
+attributes. When requesting one of the fields like name, the method being
+called will be a getter method for the attribute name. When the requested
+data is found, it is returned through the resolvers and back to the GraphQL
+client.
+Background | 13
+GraphQL endpoint GraphQL
+query
+query {
+ person {
+ name
+ ...
+ ...
+}
+GraphQL
+schema
+Resolvers
+/graphql/
+Request executor
+Query resolver
+Database
+Figure 2.1: GraphQL query flow
+2.2.4 Command-Query Responsibility Segregation (CQRS)
+Command-Query Separation (CQS) is a principle which states that every
+function in a system should either perform an action or return data, but never
+both [16]. Command-Query Responsibility Segregation (CQRS) applies the
+CQS principle by using objects of dierent operation types for performing an
+action (a command) or retrieving data (a query). GraphQL implements CQRS
+through mutation objects to change data and query objects to request
+data. Objects of the query type cannot do anything else but retrieve data,
+as shown in Listing 2.2. The query does not mutate any existing object but
+merely returns objects corresponding to the query. This is signified by the
+keyword query for the operation name PetNameAndAge.
+2.2.5 Challenges
+Per [2], developers’ usage of GraphQL rose from 5.6% in 2016 to 40.8% in
+2019. GraphQL is gaining popularity because of its easy implementation and
+its reduced data bandwidth [4]. However, there are still challenges with using
+GraphQL.
+Per the literature review conducted by Brito et al. [4], a significant
+challenge for the adoption of GraphQL is that developers integrating GraphQL
+in their applications need access to the schema to know the fields’ names and
+their relation to other objects. One solution to this is called the introspection
+system and is provided by the GraphQL tool itself. By querying the __schema
+field, a developer can get a response with the schema. This works precisely
+as the rest of GraphQL, meaning the developer needs to state all information
+they need. Listing 2.6 shows an example of a query fetching the name of
+all types in the schema. A useful tool to simplify executing queries towards
+14 | Background
+a GraphQL API is the GUI tool, GraphiQL 5. The developers can execute a
+query and view its response directly in the tool. The tool will also provide an
+interactive schema where the developer can access all fields.
+Some of the common software defects that can occur within GraphQL
+are incorrectly written queries and type mismatches. Moreover, it is also
+challenging to test GraphQL implementations. A few approaches to testing
+exist, but as far as we know, they all require manual work from developers by
+writing test cases and are specifically built for testing GraphQL APIs. This
+thesis proposes a new solution to address this challenge. We implement a
+technique to generate test cases that can directly execute GraphQL queries
+and include assertions on the types and properties of the objects returned as
+response to those queries.
+1 query {
+2 __schema {
+3 types {
+4 name
+5 }
+6 }
+7 }
+Listing 2.6: A GraphQL query fetching the schema
+2.3 Software testing
+Software testing is the practice of ensuring the quality of software systems
+by executing them under specific conditions and observing the result [17].
+Testing is often done by running test cases and determining whether the system
+passes the test cases or not. This section describes the fundamental concepts
+of software testing, automated test execution, and automated test generation.
+2.3.1 Key concepts
+This section describes some of the key concepts in software testing which are
+relevant to this thesis.
+• Test case: A test case is a sequence of steps executed to check if a
+software program behaves correctly. It is a specification of preconditions
+and inputs that are used to trigger the software program and compare its
+output with the expected result. A test case may be manual or automated.
+5https://github.com/skevy/graphiql-app
+Background | 15
+In the latter case, it is expressed in the form of code. Listing 2.8 is an
+example of a test case for the class in listing 2.7, which is based on the
+Pet type presented in section 2.2.2.
+• Unit test: A unit test ensures that a specific part or component of an
+application (called a "unit") behaves as intended. When executing the
+test, the unit is triggered, and its behavior is compared with its expected
+behavior. If the behaviors do not match, the test fails. For example, a test
+case designed to validate the implementation of a method in a program
+can be considered as a unit test. Listing 2.8 shows a unit test for the class
+in listing 2.7, where the age attribute and its methods in the Pet class
+is the unit.
+• Test input: A test input is all the inputs provided within a test case, in
+order to trigger the required behavior of the unit under test. For example,
+test inputs may consist of the arguments passed to the method being
+tested. The test input in listing 2.8 is 5, which is the input to set the age
+at line 14.
+• Test oracle: A test oracle specifies the behavior expected as a result of
+the execution of the unit under test, given the test inputs. It is therefore
+a mechanism to determine whether a test has failed or passed. For
+example, one oracle could be the value returned from a method executed
+with a set of arguments. The test oracle in listing 2.8 is the assertion on
+line 18, which will pass or fail the test case depending on whether the
+age has been incremented correctly or not.
+• Test quality: Test quality is the concept of measuring how good a test is.
+This may be determined through metrics derived from coverage [? ] or
+mutation analysis [18]. We present some examples of dierent coverage
+metrics in section 2.3.2 below.
+16 | Background
+1 <?php
+2
+3 class Pet {
+4
+5 // Attributes
+6 public $id;
+7 public $name;
+8 public $age;
+9
+10 // Methods
+11 public function getAge() {
+12 return $this ->age;
+13 }
+14
+15 public function setAge($age) {
+16 $this ->age = $age;
+17 }
+18
+19 public function incrementAge() {
+20 $this ->age += 1;
+21 }
+22 }
+Listing 2.7: Pet class
+1 <?php
+2
+3 use PHPUnit\Framework\TestCase;
+4 use Pet;
+5
+6 class PetTest extends TestCase
+7 {
+8 public function testPetAge()
+9 {
+10 // Creating pet object
+11 $pet = new Pet();
+12
+13 // Test input
+14 $pet ->setAge(5);
+15 $pet ->incrementAge();
+16
+17 // Test oracle
+18 $this ->assertEquals(6, $pet ->getAge());
+19 }
+20 }
+Listing 2.8: Example of PHPUnit test for listing 2.7
+Background | 17
+2.3.2 Coverage metrics
+One way of measuring how much of a codebase each test exercises is to
+measure its coverage. Code coverage metrics have been in use for close to 40
+years [19]. Coverage is presented as a percentage comparing the code executed
+by a test with all the code in the system. Code coverage itself may represent
+dierent aspects of the system, such as the lines of code, or the functions
+defined in the system. Line coverage represents the number of lines of code
+that are reached by the test(s), and function coverage measures the number of
+functions that have been invoked, compared to the total number of functions.
+Another coverage metric used in this thesis is the concept of schema
+coverage, proposed by Karlsson et al [7]. By combining each object defined in
+a GraphQL schema and its fields into tuples, they compare how many tuples
+have been requested by the tests, compared to the total number of tuples. The
+GraphQL schema in listing 2.1 would result in four tuples for the Person
+object ({Person, id}, {Person, name}, {Person, age}, and {Person, pet}) and
+three tuples for the Pet object ({Pet, id}, {Pet, name}, and {Pet, age}). If
+the test case in listing 2.8 would be executed, it would solely test {Pet, age},
+reaching a schema coverage of 1 / 7 (⇡14%).
+2.3.3 Automated test execution
+Automated test execution, often known as test automation, uses software
+separate from the software under test (SUT) to execute test cases and handle
+the result of those test cases. This software is often in the form of testing
+tools or frameworks that allow developers to design tests for the system based
+on its functionalities and implementation. These tools allow test cases to
+be written in code or through graphical interfaces, and present a test report
+after the tests have been executed. Automated tests can verify multiple facets
+of the component being tested, under very diverse execution scenarios with
+respect to test inputs and configurations. Moreover, they are an excellent
+complement to manual testing, as they can be run automatically every time
+a change is introduced by a developer, both locally on the developer’s end, or
+in a continuous integration context [20].
+Some automation approaches focus on unit testing, such as PHPUnit 6,
+or JUnit 7. The choice of the automation tool also depends on whether
+mobile applications, desktop applications, or web applications are to be tested.
+6https://github.com/sebastianbergmann/phpunit
+7https://junit.org/junit5/
+18 | Background
+Tools such as Selenium 8 perform UI testing, where the focus is on the
+interface shown to the user. Tools such as PHPUnit or JUnit focus on a
+single programming language to implement the test cases, i.e., PHP and Java
+respectively. Other tools such as Selenium support the implementation of test
+cases in multiple languages. Selenium does so by oering native bindings
+in various programming languages, which makes it easier for developers to
+integrate the tool into their application. It also has a browser extension
+providing record-and-playback tests, which allows web applications to be
+tested. Some tools also facilitate end-to-end testing. One such tool is Cypress
+9, which focuses on end-to-end testing for web applications through tests
+written in JavaScript, and is used by creating tests for the user flow. This
+is done by creating a script that goes through a user scenario step-by-step;
+for example, create a new user, set the name to "Frida", and submit the user
+registration form.
+A. PHPUnit
+PHPUnit is a framework for unit testing in the PHP programming language.
+PHPUnit includes assertions which compare the expected result of a sequence
+of operations performed on a program unit, with the actual result. It allows
+developers to design test cases in code, that improve the test quality of their
+PHP applications, and detect regressions, i.e., assert that the most recent
+modifications to the code do not aect any existing functionality.
+Listing 2.8 presents an example of a PHPUnit test case called testPetAge
+defined within a test class, PetTest. This test checks the attribute age for
+the object Pet and its methods. The kind of assertion used in this test is
+assertEquals, but there exist many more, for example assertIsArray
+assertNotHasKey, assertHasKey, assertNotNull,
+assertIsString, and assertIsInt. assertEquals checks that the
+value tested exactly matches a specific value, in this case, that the age of the
+pet is 6. If the age were anything but 6, the assertion would not be satisfied
+and the test would fail. If the age is in fact 6, the assertion is satisfied and the
+test passes. One can add several assertions to one test, each assertion testing
+dierent properties of a variable. assertIsArray, assertIsString,
+and assertIsInt are assertions on the object type of a specific value,
+array, String, and Int, respectively. If the type does not match the
+expected values, the test fails. assertHasKey and assertNotHasKey
+8https://www.selenium.dev
+9https://www.cypress.io
+Background | 19
+are complements of each other. Whereas assertHasKey succeeds if an
+array has the expected key, assertNotHasKey succeeds if the array does
+not have the key. One thing specific to PHP is that its arrays are actually
+ordered maps [21]. This means that one can access a specific element both
+by index and by a key, depending on how the array is implemented, which is
+why assertHasKey and assertNotHasKey are working the way they
+do. Lastly, assertNotNull succeeds if the tested value is anything but
+null.
+2.3.4 Automated test generation
+Software tests are typically designed by developers. However, dierent
+strategies have also been proposed and adopted for the automatic generation
+of test cases [22]. This section describes some strategies and associated
+challenges for automated test generation.
+A. Test generation techniques
+One approach to automated test generation is model-based testing (MBT), in
+which a model of the system under test is used to create a test oracle, in order
+to determine whether a test passes or fails. Dierent types of models may
+be used to describe dierent parts of the system. Physical models, such as
+models of bridges or buildings, have long been used for testing in engineering
+and architecture [23]. Models defined for software systems can describe
+various aspects of the system under test. For instance, a requirements data
+model defines the set of all possible values for a parameter. A test generation
+technique based on this model defines the set of valid and invalid values that
+will be provided for that parameter in a test [24]. Another common example
+of a model is a state machine, where the behavior of a system is described in
+terms of valid states through the system based on actions that are performed on
+it. Therefore, automated test generation using such models is possible where
+the next state is the expected behavior, and the entry action to that state is the
+test input [23]. For a GraphQL API, the GraphQL schema can be considered
+as the system model. Consequently, we use the GraphQL schema in this thesis
+to generate test cases.
+Another approach to automated test generation is fuzzing. Fuzzing is a
+semi-randomized approach to test generation, where the inputs of test cases are
+more or less generated randomly. The goal is to find corner cases through such
+inputs which induce test failures, which can then be used to generate tests and
+strengthen the implementation of the system under test. The term originates
+20 | Background
+from 1988 [25] where Professor Barton Miller held a class project that aimed
+to fuzz-test a UNIX utility by generating random files and command-line
+parameters [26].
+Metamorphic testing [27] is another technique used to generate tests
+automatically. This approach does not reveal failures by checking the concrete
+output from a test. Instead, the relations between the input and output of
+multiple executions of the system under test are checked. For example, if a
+function mergeSort merges two lists, L1 and L2, and sorts the new list,
+then mergeSort(L1, L2) and mergeSort(L2, L1) should give the
+same result if the function is correct. If the outputs from the two executions
+are dierent, then the function is faulty.
+Another popular approach to automated test generation is search-based,
+and research in this area has increased since 1976 [28, 29]. The goal of searchbased software testing is to find the best performing test, such as the one which
+achieves the highest coverage [30]. The simplest way to do this is to have a
+goal, for example, coverage, and randomly generate test inputs until the test
+reaches the goal. However, this is very inecient. Therefore, one might want
+to try meta-heuristic searches, where some guidance is added through a fitness
+function that ranks the test based on the goal. The fitness function guides the
+test generator towards a higher ranking [30].
+Studies have also proposed the generation of tests through capture and
+replay. The capture and replay approach to test generation often focuses
+on testing the Graphical User Interface (GUI) of the system under test by
+recording the interactions between a user and the system, and replaying them
+within generated tests to ensure that the GUI behaves accordingly. However,
+capture and replay is not solely used to test GUIs but can also be used to log
+method calls occurring during the execution of an application. This is done by
+Pasternak et al. in their tool called GenUTest, where inter-object interactions
+in Java applications are logged and used to create JUnit tests [31]. Another
+tool that works in a similar fashion is P by Tiwari et al. which monitors
+the invocation of the target methods for test generation in production, and uses
+the collected data to generate dierential unit tests [32]. Capture and replay
+can also be used to test databases. Oracle 10 has a function called Database
+Replay, which captures the workload for the system in production for a period
+of time and lets developers replay it on a test system in order to create more
+realistic tests. Wang et al. [33] demonstrate Database Replay in their paper
+and introduce a procedure to analyze the replay results based on how much of
+the workload was successfully replayed.
+10https://www.oracle.com
+Background | 21
+B. Automated test generation for schemas
+A database schema serves as a blueprint for the construction of the database
+and is usually described in some form of formal language. The schema
+depends on the kind of database it is describing. One of the existing database
+structures is based on Structured Query Language, or SQL, initially developed
+by IBM in the early 1970’s [? ], where the schema is specified using SQL
+queries. Another database structure is XML, where the schema is created in
+an XML document using XML elements.
+Various approaches to automated test generation for database schemas
+have been proposed. Some studies [34, 35] focus on testing SQL schemas
+and introduce an approach for generating SQL queries based on the database
+schema and SQL query grammar. They use the Alloy tool-set 11, a stronglytyped specification language. Their approach takes a database schema and an
+SQL query as inputs and formulates Alloy models for both [34]. Then, they use
+the Alloy Analyzer to populate a test database and generate expected results
+from executing the given query on the generated database. The SQL query is
+generated based on the Alloy models created from the query constraints and
+SQL query grammar [35]. This approach can generate each possible SQL
+query for the database.
+Bertolino et al. [36] focus on testing XML schemas and introduce an
+approach to generate XML instances automatically. The XPT (XML-based
+Partition Testing) approach leverages the fact that an XML schema contains
+all basic rules and constraints on data and parameters. It is composed of two
+components: a method to analyze the XML schema and automatically generate
+instances (XSA), and a Test Strategy Selector (TSS), which uses various test
+strategies for selecting which parts of the schema to be tested and for spreading
+the instances based on the schema elements. Bertolini et al. also implement
+their approach in a proof-of-concept tool called TAXI.
+However, neither of these approaches can be used to generate tests for a
+GraphQL schema, because the syntax for each of the schemas is specific for
+that type and can therefore not be reused for other types.
+C. Automated test generation for GraphQL
+A few studies propose automated test generation techniques for GraphQL.
+Vargas et al. created a test generating technique for GraphQL called deviation
+testing [6]. Deviation testing is a form of test amplification [37] that takes
+11https://alloytools.org
+22 | Background
+one initial test and creates variations of this test, called deviations. These
+deviations are created based on four dierent approaches: Fields Deviation,
+Not Null Deviation, Type Deviation, and Empty Fields Deviation. The Fields
+Deviation approach adds and removes fields from the original query based
+on the GraphQL schema. The Not Null Deviation approach replaces a not
+null field with null and expects an error to be thrown. The Type Deviation
+approach replaces an argument with one that does not match the expected
+type and expects an error. The Empty Fields Deviation approach deletes all
+fields and subfields of a query and expects a syntax error. They tested their
+technique on three study subjects, and the results showed that two of them
+had issues handling the Empty Fields Deviation. One of the strengths of this
+technique is that it does not require much eort from the developers and it is
+easy to amplify the existing test suite by adding new test cases. However, it still
+requires pre-existing manually written test cases, which means that Frontapp
+cannot use this technique, since it does not contain any test cases for their
+GraphQL API.
+Karlsson et al. created a test generation tool for GraphQL based on
+GraphQL schemas [7]. The queries in the created tests are randomly generated
+based on the objects and fields in the schema. The tool also has an argument
+generator that randomly creates arguments, either fully randomly, or based on
+specified types for each argument. For example, if an argument is defined to be
+an integer, the tool will not generate a random string but a random integer. The
+proposed technique focuses on testing two properties: HTTP status code and
+the types of the returned fields. First, they evaluate the status code returned by
+executing the query. Next, they compare the response from the execution of
+the query with the schema in order to verify the types of the returned fields.
+However, the paper is a bit unclear on how detailed their tests are in terms of
+the properties of the returned objects that are verified through assertions. Our
+study aims to address the limitations of this study by generating test cases
+based on actual queries and their arguments logged from production, and
+therefore, will not need to use a random approach for test generation.
+2.4 Redeye
+This thesis is conducted at a company called Redeye in Stockholm, Sweden.
+The following section describes Redeye and their technology stack.
+Background | 23
+2.4.1 What is Redeye?
+Redeye 12 is an equity research and investment banking company based in
+Stockholm, Sweden. One of their focuses is analyzing companies and writing
+articles and reports about that analysis. Redeye develops and maintains
+multiple software systems for various purposes. They started developing
+software more than 7 years ago, yet they have no existing automated tests. The
+primary system that we are focusing on in this study is Redeye’s website, called
+Frontapp. Frontapp contains, among other things, Redeye’s latest company
+articles, and most of the users are private persons.
+2.4.2 Tech stack
+The backend for Frontapp is implemented with the PHP Symfony framework
+13 and is actively developed by four developers at Redeye. The frontend
+is implemented using React 14 and JavaScript 15 and is actively developed
+by three developers. Frontapp is over seven years old and has roughly 154
+thousand lines of code, of which 67% is JavaScript and 24% is PHP. The
+project is hosted as a private repository on GitHub 16 and has 24 contributors
+and over 7000 commits. Heroku CI17 is used as a continuous integration tool,
+New Relic 18 for profiling, and Bugsnag 19 for error monitoring. Jira 20 is used
+for issue tracking. There are no existing tests in Frontapp, which results in 0%
+code coverage.
+2.5 Conclusion
+Whereas GraphQL continues to gain popularity, the techniques to facilitate
+testing through automatic test generation are few, as introduced in section 2.3.4.
+There are some existing tools to generate tests for schemas, but as discussed
+in section 2.3.4, they cannot be applied to GraphQL. The test generation
+approaches proposed for GraphQL, introduced in section 2.3.4, either need
+12https://www.redeye.se/
+13https://symfony.com
+14https://reactjs.org
+15https://www.javascript.com
+16https://github.com
+17https://www.heroku.com
+18https://newrelic.com
+19https://www.bugsnag.com
+20https://www.atlassian.com/software/jira
+24 | Background
+pre-existing tests [6], which Redeye do not have, or use test input randomization
+[7]. Even though they generate tests that can detect software defects, these
+techniques could have issues generating specific inputs that often are needed,
+such as specific arguments that are required for a GraphQL query based on the
+schema. The general problem is the lack of a technique that generates relevant
+test cases without needing too much time and eort from the developers. This
+thesis aims to contribute by creating a technique that generates tests with
+meaningful test inputs and automated, relevant test oracles, independent of
+the existence of a test suite.
+Chapter 3
+AutoGraphQL
+This chapter presents AutoGraphQL 1, the key technical contribution of this
+thesis.
+3.1 Test generation principle
+This section describes the principles of test generation with AutoGraphQL.
+The objective is to automatically generate valid test cases that can exercise a
+GraphQL API implementation. This means that the generated tests include
+valid test inputs, test oracles, as well as the required structure that makes these
+test cases executable. AutoGraphQL is expected to use the GraphQL queries
+logged in production as test inputs in the generated tests, make requests to
+the GraphQL API with these queries, generate oracles based on the GraphQL
+schema defined in the application as well as the response from the executed
+query. The expectation is also to eventually be able to run test cases in a
+CI/CD pipeline, which demands a lower execution time for the generated
+tests. Therefore, AutoGraphQL works by monitoring the GraphQL API in
+production, turning the logged production queries into test inputs, and deriving
+the oracle from the GraphQL schema.
+3.2 Overview
+Figure 3.1 shows an overview of how AutoGraphQL generates tests from
+GraphQL queries. As a user interacts with the front-end of an application
+where the Web API is implemented through GraphQL, the queries and their
+1https://github.com/louisezetterlund/autographql
+25
+26 | AutoGraphQL
+corresponding arguments are logged into a database. AutoGraphQL takes as
+input the entries from this database and analyzes them in order to extract test
+inputs. Additionally, AutoGraphQL uses the GraphQL schema specified in the
+application to define test oracles. The test inputs and oracles are then used to
+populate a PHPUnit template in order to generate unit tests for the application.
+We present each of these steps in more detail in the following sections.
+Query analyzer Test generator
+Queries
+Query
+database
+AutoGraphQL
+Test generation
+Query logging
+Unit tests
+Backend
+Test oracles
+Test inputs
+Database
+GraphQL
+schema
+Controller
+Query resolver
+Event listener
+PHPUnit template
+Frontend
+Figure 3.1: The test generation pipeline of AutoGraphQL
+3.3 Query logging
+Given an application that uses GraphQL, the queries corresponding to the
+interactions of an end-user as she browses the web page of the application,
+are logged into a query database. This section describes the protocol used to
+log these queries.
+Each incoming request made on the GraphQL endpoint is received by
+the controller in the application. In order for the underlying query to be
+handled, the controller forwards the request to the query resolver, which has
+AutoGraphQL | 27
+been described in subsection 2.2.3. As in the case of normal query execution,
+the query resolver processes the request and interacts with the database in
+the application. The response from the database is sent back to the query
+resolver, onto the controller, and finally back to the front-end. However, each
+time a request reaches the query resolver, an event listener defined within
+AutoGraphQL gets triggered. The event listener checks the GraphQL queries
+contained in the incoming requests against the database that stores the queries
+previously recorded. A new entry is added to the database for each unique
+combination of a query and its associated arguments (see subsection 2.2.2). If
+this combination already exists in the database, a counter is incremented.
+Listing 3.1 shows the example of an entry in the query database. This
+entry corresponds to the query in Listing 2.2, based on the GraphQL schema
+defined in Listing 2.1. The fields in the entry are query, variables,
+operationName, created_at, updated_at, and times_called.
+The query field represents the GraphQL query, the variables contains
+its arguments, and operationName signifies the name of the query. The
+created_at field is a timestamp for the first time the query was called, i.e.,
+when the entry in the database was created, and updated_at is when it was
+called most recently. The field times_called is the counter keeping track
+of how many times this combination of query plus arguments has been called.
+The value 15 for times_called implies that this exact query has so far
+been logged 15 times as the end-user interacts with the front-end.
+When logging queries, one aspect to consider is whether the queries
+should be logged in dierent databases depending on production or stage
+environment. If they are not separated, one would have to check that a query
+and the wanted fields exist in the chosen environment; otherwise, some test
+cases will fail even though they are correct. This is because queries from the
+stage environment could be logged even though the changed schema has not
+been merged into production. If executed in the production environment, the
+test cases will fail because the query or its fields do not exist in production. The
+queries from the stage environment need to be logged; otherwise, developers
+cannot interact with the application and, in that way, generate test cases for
+newly developed features without needing to merge into production first, which
+would undermine the idea of testing the GraphQL API before deploying new
+feature. A separated solution is used in this thesis, which means that the
+queries executed in production and stage are stored in dierent databases.
+Another aspect to consider is the reoccurrence of some queries and
+arguments. If one would log each query without checking that it would
+generate a unique test case, the database could become huge, quite fast. This
+28 | AutoGraphQL
+is solved, as mentioned earlier, by only logging unique combinations of query
+and argument. If a combination already exists in the database, a counter is
+incremented and can therefore be used to prioritize test generation/execution,
+as will be discussed in section 6.4.
+1 {
+2 " query ":
+3 " query PetNameAndAge ( $id: Int !) {
+4 person (id: $id) {
+5 name
+6 pet {
+7 name
+8 age
+9 }
+10 }
+11 }",
+12 " variables ": {
+13 "id": 10
+14 } ,
+15 " operationName ": " PetNameAndAge ",
+16 " created_at ": " 2021-03-03 08:57:46 ",
+17 " updated_at ": " 2021-05-05 16:55:19 ",
+18 " times_called ": 15
+19 }
+Listing 3.1: An example of an entry in the query database
+3.4 Test generation
+As described in section 3.3, AutoGraphQL takes two inputs: the queries
+observed in production and stored in the query database, as well as the
+GraphQL schema. The test generation phase of AutoGraphQL is conducted
+oine and consists of analyzing the logged queries along with the schema,
+in order to perform two operations: test input generation and test oracle
+generation. For example, Listing 3.3 shows how a PHPUnit test generated
+by AutoGraphQL would look like, including the test input and test oracles,
+corresponding to the entry in Listing 3.1. This section describes the test
+generation process in detail.
+3.4.1 Test input generation
+For each entry in the query database, AutoGraphQL extracts the GraphQL
+query, its associated arguments, as well as the operation name. The combination
+AutoGraphQL | 29
+of these values forms a test input for one generated test. During test case
+generation, this extracted test input is sent as a parameter to a template file,
+where it is wrapped in code, making it the payload of an HTTP request.
+For example, in Listing 3.1, the values corresponding to the fields query,
+variables, and operationName become the extracted test input for one
+unit test generated by AutoGraphQL (line 19 in Listing 3.3). When the test
+case is executed, an HTTP request, such as the one on line 23 in Listing 3.3, is
+sent to the GraphQL API and the response is used in the assertions in the test
+case.
+3.4.2 Test oracle generation
+AutoGraphQL aims to detect a mismatch in type properties, such as string,
+integer, and objects, of the response from the queries executed in the generated
+tests. The generated oracles are tailored to the test inputs in order to detect this
+class of software defects.
+AutoGraphQL uses the logged queries and the complete GraphQL schema
+specified in the application in order to generate test oracles. The GraphQL
+schema serves as the model for this test generation, making the test oracles
+model-based. The test oracles can thus be automatically generated with respect
+to any valid inputs collected in production. First, AutoGraphQL fetches
+the complete schema to obtain information about the dierent field types.
+Next, it loops through the value of the query field in each entry of the
+query database and parses each query into a tree. The oracle generation
+algorithm of AutoGraphQL includes steps to visit each node of this tree
+and compare it with the schema in order to determine its type, and whether
+it is defined as nullable. Doing so allows the oracles to be expressed in
+the form of assertions. It then creates assertions based on this information,
+using the dictionary in Listing 3.2. This dictionary is a default part of
+AutoGraphQL, and is responsible for connecting a type with an appropriate
+assertion in PHPUnit. For example, the assertion corresponding to a LIST
+type in GraphQL will be assertIsArray in the generated PHPUnit test,
+the assertion for a non-nullable type will be assertNotNull, and so on.
+Moreover, assertArrayHasKey assertions are also generated to confirm
+that the response includes each of the fields requested by the query. All
+the assertions are then stored in a list which is used to populate a template
+which creates a PHPUnit test file with the generated test. Lines 28 to 45 in
+the PHPUnit test in Listing 3.3 signify the generated oracles for the query in
+Listing 3.1. Some assertions are made inside if-statements and for-loops. The
+30 | AutoGraphQL
+for-loops are added when a field type is a list of objects. This is needed in order
+to include assertions for each object in the returned list. The if-statements
+are added whenever a type is nullable, in order to evaluate the assertions for
+potential objects if present, without failing the test, if not present.
+One aspect to consider here is that when JSON-encoding floats where the
+fractional part is zero (e.g., 3.0), PHP will, by default, encode the number as an
+integer rather than as a float, making some test cases using assertIsFloat
+fail. This was solved by using the assertion assertIsNumeric for Floats
+instead of assertIsFloat.
+1 assertionDict = {
+2 ’LIST ’: " assertIsArray ",
+3 ’NON_NULL ’: " assertNotNull ",
+4 ’Float ’: ’ assertIsNumeric ’,
+5 ’String ’: ’ assertIsString ’,
+6 ’Int ’: ’ assertIsInt ’,
+7 ’Boolean ’: ’ assertIsBool ’,
+8 ’OBJECT ’: ’ assertEquals ’,
+9 ’INTERFACE ’: ’ assertContains ’,
+10 ’ENUM ’: ’ assertContains ’
+11 }
+Listing 3.2: Dictionary to connect a type with the correct assertions
+3.5 Implementation
+All components of the query-logging phase are written in the PHP framwork,
+Symfony. The logged queries are saved as JSON files and stored in a MySQL
+database 2. AutoGraphQL is implemented in Python 3. GraphQLParser 4 is
+used to convert the query into an Abstract Syntax Tree (AST). Jinja2 5 is the
+templating language used to render the assertions into a PHPUnit file.
+As described in section 3.3, only unique combinations of queries and
+arguments are logged as new entries in the query database. The arguments are
+sorted before checking that the combination is unique in order to ensure that
+argument order does not aect uniqueness. The default value for
+times_called is 1, and the current date and time are stored in
+created_at. For each subsequent occurrence of the same combination of
+query and argument, times_called is incremented, and updated_at is
+2https://www.mysql.com
+3https://www.python.org
+4https://github.com/ivelum/graphql-py
+5https://jinja.palletsprojects.com/en/2.11.x/
+AutoGraphQL | 31
+set to the current date and time.
+After the query is converted into an AST, the tool walks through it while
+checking the field types against the GraphQL schema. A new tree is created
+where each node includes name (String), kind (String), type (String),
+non_null (Boolean), children (List of nodes), and hasTypeName
+(Boolean). name is the name of the object in the schema, kind is the
+outlying type like list, object, etc., type is string, int, etc., non_null refers
+to whether the field is nullable or not, children is a list with pointers to
+the field’s children in the query (if a field is another object, the children are
+the requested fields of that object), and hasTypeName refers to whether
+__typename has been requested on the field (if it is an object) and is used
+to check what object is being returned in a inline fragment or union. After the
+creation of the field-type tree a Depth-first search (DFS) is used to connect the
+correct assertions to each field. A DFS is required to include the correct fields
+in for-loops and if-statements.
+32 | AutoGraphQL
+1 <?php
+2 declare ( st rict_type s =1) ;
+3
+4 namespace GraphQL ;
+5
+6 use PHPUnit \ Framework \ TestCase ;
+7 use Symfony \ Bundle \ FrameworkBundle \ Test \ WebTestCase ;
+8 use Symfony \ Component \ HttpFoundation \ Request ;
+9
+10 class PetNameAndAgeTest extends WebTestCase
+11 {
+12 / 
+13  @runInSeparateProcess
+14  /
+15 public function testGraphQL ()
+16 {
+17 $client = static :: createClient () ;
+18
+19 $que ry = <<< ’JSON ’
+20 { " query " : " query PetNameAndAge ( $id : Int ! ) { person ( i d : $id ) {name pet {name age }}} " , " variables "
+: { " i d " :10} , " operationName " : " PetNameAndAge " }
+21 JSON ;
+22
+23 $client ≠>request ( ’POST ’ , ’ / graphql / ’ , [] , [] , [ "CONTENT_TYPE" => ’ application / json ’ ] , $query ) ;
+24 $response = $client ≠>getResponse () ;
+25
+26 $this ≠>assertEquals (200 , $response ≠>getStatusCode () ) ;
+27 $responseArray = json_decode ( $response ≠>getContent () , true ) ;
+28 $this ≠>assertIsArray ( $responseArray , ’ Response i s not valid JSON ’ ) ;
+29 $this ≠>assertArrayNotHasKey ( ’ errors ’ , $responseArray , ’ Response contains errors ’ ) ;
+30 $responseContent = $responseArray [ ’ data ’ ] ;
+31
+32 $this ≠>assertArrayHasKey ( ’ person ’ , $responseContent ) ;
+33 i f ( $responseContent [ ’ person ’ ]) {
+34 $this ≠>assertArrayHasKey ( ’ name ’ , $responseContent [ ’ person ’ ]) ;
+35 $this ≠>assertNotNull ( $responseContent [ ’ person ’ ] [ ’ name ’ ]) ;
+36 $this ≠>assertIsString ( $responseContent [ ’ person ’ ] [ ’ name ’ ]) ;
+37 $this ≠>assertArrayHasKey ( ’ pet ’ , $responseContent [ ’ person ’ ]) ;
+38 i f ( $responseContent [ ’ person ’ ] [ ’ pet ’ ]) {
+39 $this ≠>assertIsArray ( $responseContent [ ’ person ’ ] [ ’ pet ’ ]) ;
+40 for ( $g = 0; $g < count ( $responseContent [ ’ person ’ ] [ ’ pet ’ ] ) ; $g++) {
+41 $this ≠>assertArrayHasKey ( ’ name ’ , $responseContent [ ’ person ’ ] [ ’ pet ’ ] [ $g ] ) ;
+42 $this ≠>assertNotNull ( $responseContent [ ’ person ’ ] [ ’ pet ’ ] [ $g ] [ ’ name ’ ]) ;
+43 $this ≠>assertIsString ( $responseContent [ ’ person ’ ] [ ’ pet ’ ] [ $g ] [ ’ name ’ ]) ;
+44 $this ≠>assertArrayHasKey ( ’ age ’ , $responseContent [ ’ person ’ ] [ ’ pet ’ ] [ $g ] ) ;
+45 $this ≠>assertNotNull ( $responseContent [ ’ person ’ ] [ ’ pet ’ ] [ $g ] [ ’ age ’ ]) ;
+46 $this ≠>assertIsInt ( $responseContent [ ’ person ’ ] [ ’ pet ’ ] [ $g ] [ ’ age ’ ]) ;
+47
+48 }
+49 }
+50 }
+51 }
+52 }
+Listing 3.3: Example of generated PHPUnit test
+Chapter 4
+Methodology
+This chapter describes how AutoGraphQL will be evaluated and tested on
+Redeye’s primary system, Frontapp. We first define and motivate our research
+questions, then we present an overview of the thesis timeline, and lastly, we
+introduce the protocol followed to answer them.
+4.1 Research questions
+RQ1: What is the nature of errors in Frontapp?
+Since Frontapp has no test when the thesis starts, we want to implement
+tests where they will have the most impact. For this reason, we first investigate
+the most common errors that are reported for Frontapp. Based on the results of
+RQ1, we decided to build a test generation tool called AutoGraphQL targeting
+the kind of error identified in Frontapp. The remaining research questions aim
+at evaluating AutoGraphQL.
+RQ2: Is AutoGraphQL able to generate tests for Frontapp?
+We want to determine if AutoGraphQL can generate PHPUnit tests that are
+syntactically correct and that can run against Frontapp. We also investigate the
+characteristics of these tests such as the number of assertions.
+RQ3: How much of the Frontapp code and schema is covered by the
+AutoGraphQL tests?
+In order to determine the quality of the tests generated by AutoGraphQL
+based on one month of logging queries, we measure the schema coverage and
+code coverage obtained from them.
+33
+34 | Methodology
+RQ4: How many errors do the AutoGraphQL tests find in Frontapp?
+We want to investigate how many errors AutoGraphQL finds in Frontapp
+to determine if these tests can be useful in improving the quality of the system.
+RQ5: How many of the Frontapp errors documented in the data collection
+done for RQ1 are found?
+We want to see if the tests discover any of the errors found in the data
+collection phase, since we know that those errors occur and disrupt production.
+4.2 Timeline
+This section describes the timeline in which this thesis was conducted. This
+timeline, presented in figure 4.1, can be described as a sequence of five
+dierent phases: data collection, query logging, tool implementation, test
+generation and execution, and lastly, result analysis.
+The data collection phase for answering RQ1 lasted for a period of 4
+weeks, during which the developers at Redeye were required to log the errors
+they fix in the system. This is done to investigate the nature of defects in
+Frontapp and identify areas which can benefit from automatically generated
+tests. The next phase lasted for a period of 33 days, during which the queries
+executed in production were logged in order to serve as inputs for the generated
+tests. AutoGraphQL was developed in the tool implementation phase, and in
+the following phase, it was employed to generate test cases using the logged
+queries. The resulting tests were also executed during this phase. Lastly, the
+final phase of the thesis was dedicated to the analysis of the results from the
+executed test cases.
+Result
+analysis
+Data
+collection
+Query
+logging
+AutoGraphQL
+implementation
+Test generation
+ + execution
+Figure 4.1: Thesis timeline
+4.3 Study subject
+We perform a case-based research study [38] at Redeye to evaluate
+AutoGraphQL. We have chosen their primary system, Frontapp, because it is
+Methodology | 35
+their largest and most used system. Frontapp is untested with a code coverage
+and schema coverage of 0%.
+4.3.1 Redeye API
+The systems of Redeye started with a monolith architecture but are migrating
+towards microservices. They use GraphQL and REST for their web APIs.
+The REST API was originally implemented before GraphQL, and therefore
+still handles some calls. Some of the REST functions are data-modifying
+functions, since Redeye does not use the mutation queries of GraphQL.
+Their goal is to solely use GraphQL in the future. Frontapp’s GraphQL
+implementation is connected to multiple data sources and receives
+approximately 63.6K requests daily. They use a schema stitcher 1 that makes
+it possible to request data from dierent data sources in the same request.
+4.3.2 Schema
+Redeye’s GraphQL schema contains 115 types and 23 queries. They use only
+Query types and not Mutation types, which means that incoming queries do
+not modify data but only fetches it. Among abstract types, they use interfaces
+but not unions. They also use inline fragments but not fragments.
+4.3.3 Experimental setup
+All developers continued to work as usual during the time this thesis was
+conducted. They were only aected during four weeks when they added some
+extra information to their issues. The logged queries were stored in a MySQL2
+database. All queries were extracted and stored on a computer owned by
+the author. All tests were generated through AutoGraphQL running locally
+on the same computer, and the tests also were run on this computer. The
+generated tests were run to determine which ones passed and failed, as well as
+to determine the coverage achieved. This will be described more below.
+4.4 Protocol
+This section describes how we aim to answer the research questions stated in
+section 1.2.
+1https://www.graphql-tools.com/docs/schema-stitching/
+2https://www.mysql.com
+36 | Methodology
+4.4.1 RQ1
+We aim to answer the first research question by letting the developers log the
+errors they fix in the system during four weeks, which lets us state the number
+of errors the system has during this time, where these errors occur, and where
+the fix is implemented. The developers are using the development tool Jira
+by Atlassian 3 to track their issues. They will add extra information about
+the issue they fix during four weeks: error type, resolution description, and
+commit identifier on GitHub.
+4.4.2 RQ2
+We aim to answer the second research question by generating test cases from
+the logged queries and run some characteristics on these tests, such as the
+number of tests, the number of assertions generated, and the number of
+assertions executed.
+4.4.3 RQ3
+We aim to answer the third research question by investigating the code
+coverage and the schema coverage of Frontapp when executing the test cases
+generated from the queries logged in the first month. We calculate the code
+coverage by using PHPUnit’s code coverage tool 4 and the schema coverage
+based on the article by Karlsson et al. [7]. The code coverage is based on lines
+of code executed, and the schema coverage uses tuples made from an object
+and its fields to calculate which fields have been requested and which have not.
+4.4.4 RQ4
+We aim to answer the fourth research question by investigating the generated
+tests that fail. This is done in order to determine whether the failure is valid
+or not, i.e. whether the failing tests point to an error in the production code
+or the GraphQL schema for Frontapp. This will be concluded with help from
+developers at Redeye.
+3https://www.atlassian.com/software/jira
+4https://github.com/sebastianbergmann/php-code-coverage
+Methodology | 37
+4.4.5 RQ5
+We aim to answer the last research question by comparing the output from
+failed test cases with the errors found during the data collection. If the same
+query with the same output is triggered, we conclude that the error is the same
+and is found by a test generated by AutoGraphQL. We will also check the
+errors the tests do not detect, if any, to see whether the defects still exist in the
+system or not. This will be concluded by executing the query that triggered
+the defect to examine if the same error occurs.
+Chapter 5
+Results
+This chapter presents the results for the research questions defined in chapter 4.
+We discuss the findings from the data collection phase, as well as the metrics
+of the tests generated by AutoGraphQL. As described in subsection 4.4.1, the
+data collection lasted for a period of four weeks, with the goal of studying the
+nature of errors in Frontapp based on the bugs solved by developers (RQ1).
+The data to answer the research questions about AutoGraphQL was collected
+from the tests generated by the tool (RQ2 - RQ5).
+5.1 RQ1 - Nature of errors in the system
+The first research question deals with the nature of errors in Frontapp. During
+the four weeks that data collection was performed, developers documented 18
+errors, and Bugsnag monitored 41 errors. Table 5.1 presents the errors found
+by developers. It shows that approximately 39% (7 / 18) of the errors were in
+an external service, and around 11% (2 / 18) were in Frontapp. 5 of the errors
+were due to issues with APIs and 3 of the errors were styling-connected.
+Table 5.2 presents errors reported by Bugsnag. It shows that 12 of the
+41 errors reported were classified as a software defect by developers and in
+Frontapp, and 5 of these errors were related to GraphQL, while the other seven
+errors had no apparent correlation between each other. The GraphQL errors
+were due to ill-formed responses, such as, a non-nullable field has a null-value
+(4 errors) and uses of a function which had not been deployed to production
+at the time (1 error). One of the errors is caused by the non-nullable method
+presented in listing 5.1, when the attribute it is returning is nullable in the
+database. Therefore, an error occurs whenever the method tries to return null.
+This shows that Frontapp, as an untested application, has errors and that
+38
+Results | 39
+the GraphQL API is, according to our data collection, the component with the
+most errors. Hence, we consider the generation of tests for the GraphQL API
+of Frontapp as a relevant starting point to initiate the creation of a test suite
+for the application. We will also use these errors in RQ5 to evaluate whether
+the tests that we generate can detect errors that appear in production.
+Table 5.1: Errors found by developers
+No. of errors 18
+No. of errors in Frontapp 2
+No. of errors in external service 7
+No. of API-errors 5
+No. of styling-errors 3
+Table 5.2: Errors found by Bugsnag
+No. of errors 41
+No. of errors in Frontapp 12
+No. of errors related to GraphQL 5
+1 public function thumbnailUrl(): string
+2 {
+3 return $this ->thumbnailUrl;
+4 }
+Listing 5.1: Bugsnag error method
+5.2 RQ2 - Test characteristics
+The second research question aims to determine whether AutoGraphQL can
+generate tests based on the logged queries. The system was monitored
+for 33 days, where queries were logged. The database entry of the most
+executed query (301, 016 times) is presented in listing 5.2. Based on the
+logged queries, AutoGraphQL successfully generated 24, 049 PHPUnit tests
+40 | Results
+by extracting all queries from the query database. Table 5.3 presents the
+dierent characteristics for these generated tests. The tests are generated
+from 231 unique queries for the 19 dierent query types in Frontapp. The
+average number of logged queries per unique query was approximately 104,
+which means that each query endpoint was on average tested in 104 dierent
+test cases. The generated tests contain a total of 1, 376, 479 assertions, with
+roughly 57 assertions per test. The median amount of assertions per generated
+test is 47.
+Table 5.3: Characteristics of generated tests
+No. of unique tests 24, 049
+No. of unique queries 231
+Average no. of entries / query ⇡ 104
+No. of query types 19
+No. of assertions 1, 376, 479
+Average generated assertions / test ⇡ 57
+Median generated assertions / test 47
+Table 5.4 presents the data from the executed tests. All of the 24, 049
+PHPUnit tests generated by AutoGraphQL could successfully be compiled.
+When the tests were run, a total of 8, 727, 519 assertions were evaluated,
+which gives an average of approximately 363 evaluated assertions per test.
+As can be seen when comparing table 5.3 and table 5.4, the number of
+evaluated assertions (8, 727, 519) is significantly greater than the number of
+assertions generated in total (1, 376, 479) because a large number of assertions
+are included within loops inside the generated tests. This can be seen at line
+36 in the test case in listing 5.3, which is the test case generated from the
+query in listing 5.2. The reason for the for-loop is to handle objects in lists,
+as the corresponding schema in listing 5.4 shows at line 13. It states that the
+query executed will return a list of n amount of NowTeaser objects. This
+means that the for-loop will run for each object in the returned list, making the
+evaluated assertions n-times greater than the generated.
+Results | 41
+1 {
+2 " query ":
+3 " query getTeasers ( $_v0_page : Int !) {
+4 nowTeasers ( page : $_v0_page ) {
+5 title
+6 subTitle
+7 type
+8 date
+9 url
+10 imageId
+11 premium
+12 promoted
+13 __typename
+14 }
+15 }",
+16 " variables ": {
+17 " _v0_page ": 1
+18 } ,
+19 " operationName ": " getTeasers ",
+20 " created_at ": " 2021-03-03 08:57:46 ",
+21 " updated_at ": " 2021-05-05 16:55:19 ",
+22 " times_called ": 301016
+23 }
+Listing 5.2: An entry from the query database
+Table 5.4: Characteristics of executed tests
+No. of tests 24, 049
+No. of assertions 8, 727, 519
+Average executed assertions / test ⇡ 363
+42 | Results
+1 <?php
+2 declare ( st rict_type s =1) ;
+3
+4 namespace GraphQL ;
+5
+6 use PHPUnit \ Framework \ TestCase ;
+7 use Symfony \ Bundle \ FrameworkBundle \ Test \ WebTestCase ;
+8 use Symfony \ Component \ HttpFoundation \ Request ;
+9
+10 class P1Q5f25edb726e3514c9cb6d3da146f7ff7 extends WebTestCase
+11 {
+12 / 
+13  @runInSeparateProcess
+14  /
+15 public function testGraphQL ()
+16 {
+17 $client = static :: createClient () ;
+18
+19 $que ry = <<< ’JSON ’
+20 { " query " : " query getTeasers ( $_v0_page : Int ! ) { \ n nowTeasers ( page : $_v0_page ) { \ n title \ n
+subTitle \ n type \ n date \ n url \ n imageId \ n premium \ n promoted \ n __typename \ n
+} \ n } \ n " , " variables " : { " _v0_page " :1} , " operationName " : " getTeasers " }
+21 JSON ;
+22
+23 $client ≠>request ( ’POST ’ , ’ / graphql / ’ , [] , [] , [ "CONTENT_TYPE" => ’ application / json ’ ] , $query ) ;
+24 $response = $client ≠>getResponse () ;
+25
+26 $this ≠>assertEquals (200 , $response ≠>getStatusCode () ) ;
+27 $responseArray = json_decode ( $response ≠>getContent () , true ) ;
+28 $this ≠>assertIsArray ( $responseArray , ’ Response i s not valid JSON ’ ) ;
+29 $this ≠>assertArrayNotHasKey ( ’ errors ’ , $responseArray , ’ Response contains errors ’ ) ;
+30 $responseContent = $responseArray [ ’ data ’ ] ;
+31
+32 $this ≠>assertArrayHasKey ( ’ nowTeasers ’ , $responseContent ) ;
+33 i f ( $responseContent [ ’ nowTeasers ’ ]) {
+34 $this ≠>assertIsArray ( $responseContent [ ’ nowTeasers ’ ]) ;
+35
+36 for ( $g = 0; $g < count ( $responseContent [ ’ nowTeasers ’ ] ) ; $g++) {
+37
+38 i f ( $responseContent [ ’ nowTeasers ’ ] [ $g ] ) {
+39 $this ≠>assertEquals ( ’ NowTeaser ’ , $responseContent [ ’ nowTeasers ’ ] [ $g ] [ ’ __typename ’
+]) ;
+40 $this ≠>assertArrayHasKey ( ’ title ’ , $responseContent [ ’ nowTeasers ’ ] [ $g ] ) ;
+41 $this ≠>assertNotNull ( $responseContent [ ’ nowTeasers ’ ] [ $g ] [ ’ title ’ ]) ;
+42 $this ≠>assertIsString ( $responseContent [ ’ nowTeasers ’ ] [ $g ] [ ’ title ’ ]) ;
+43 $this ≠>assertArrayHasKey ( ’ subTitle ’ , $responseContent [ ’ nowTeasers ’ ] [ $g ] ) ;
+44 $this ≠>assertNotNull ( $responseContent [ ’ nowTeasers ’ ] [ $g ] [ ’ subTitle ’ ]) ;
+45 $this ≠>assertIsString ( $responseContent [ ’ nowTeasers ’ ] [ $g ] [ ’ subTitle ’ ]) ;
+46 $this ≠>assertArrayHasKey ( ’ type ’ , $responseContent [ ’ nowTeasers ’ ] [ $g ] ) ;
+47 $this ≠>assertNotNull ( $responseContent [ ’ nowTeasers ’ ] [ $g ] [ ’ type ’ ]) ;
+48 $this ≠>assertIsString ( $responseContent [ ’ nowTeasers ’ ] [ $g ] [ ’ type ’ ]) ;
+49 $this ≠>assertArrayHasKey ( ’ date ’ , $responseContent [ ’ nowTeasers ’ ] [ $g ] ) ;
+50 $this ≠>assertNotNull ( $responseContent [ ’ nowTeasers ’ ] [ $g ] [ ’ date ’ ]) ;
+51 $this ≠>assertIsString ( $responseContent [ ’ nowTeasers ’ ] [ $g ] [ ’ date ’ ]) ;
+52 $this ≠>assertArrayHasKey ( ’ url ’ , $responseContent [ ’ nowTeasers ’ ] [ $g ] ) ;
+53
+54 i f ( $responseContent [ ’ nowTeasers ’ ] [ $g ] [ ’ url ’ ]) {
+55 $this ≠>assertIsString ( $responseContent [ ’ nowTeasers ’ ] [ $g ] [ ’ url ’ ]) ;
+56 }
+57
+58 $this ≠>assertArrayHasKey ( ’ imageId ’ , $responseContent [ ’ nowTeasers ’ ] [ $g ] ) ;
+59 $this ≠>assertNotNull ( $responseContent [ ’ nowTeasers ’ ] [ $g ] [ ’ imageId ’ ]) ;
+60 $this ≠>assertIsString ( $responseContent [ ’ nowTeasers ’ ] [ $g ] [ ’ imageId ’ ]) ;
+61 $this ≠>assertArrayHasKey ( ’ premium ’ , $responseContent [ ’ nowTeasers ’ ] [ $g ] ) ;
+62 $this ≠>assertNotNull ( $responseContent [ ’ nowTeasers ’ ] [ $g ] [ ’ premium ’ ]) ;
+63 $this ≠>assertIsBool ( $responseContent [ ’ nowTeasers ’ ] [ $g ] [ ’ premium ’ ]) ;
+64 $this ≠>assertArrayHasKey ( ’ promoted ’ , $responseContent [ ’ nowTeasers ’ ] [ $g ] ) ;
+65 $this ≠>assertNotNull ( $responseContent [ ’ nowTeasers ’ ] [ $g ] [ ’ promoted ’ ]) ;
+66 $this ≠>assertIsBool ( $responseContent [ ’ nowTeasers ’ ] [ $g ] [ ’ promoted ’ ]) ;
+67 }
+68 }
+69 }
+70 }
+71 }
+Listing 5.3: Generated PHPUnit test
+Results | 43
+1 type NowTeaser {
+2 title: String!
+3 subTitle: String!
+4 type : String!
+5 date: String!
+6 url: String
+7 imageId: String!
+8 premium: Boolean!
+9 promoted: Boolean!
+10 }
+11
+12 Query {
+13 nowTeasers(page: Int!): [NowTeaser]
+14 }
+Listing 5.4: Schema for query
+Figure 5.1 shows the distribution of entries per query in the query database.
+Each query test target is presented on the Y-axis, and the number of generated
+tests is presented in a logarithmic scale on the X-axis. More than 50% of
+the entries are related to the search query and roughly 25% of them to
+the searchResults query. This observation is not surprising since these
+two kinds of queries are generated from what the end-user is typing on the
+Frontapp website, so each new search term creates a new entry in the database.
+Figure 5.2 presents the distribution of the number of generated assertions
+per query. The orange line represents the median number of generated
+assertions per query test target, the boxes show the 25th to 75th percentile,
+and the circles represent the outliers. The company query returns the
+largest object in GraphQL, which means many fields to request, hence many
+assertions and a wide range.
+When comparing figure 5.1 and figure 5.2, one can see that the queries
+themes and ratingStatistics each only have one test case, which also explains
+why only the median is shown in the boxplot. Both indexChart and
+topCommunityPosts have less than 5 generated tests containing the same
+number of assertions, which is represented by the value of the median in the
+plot.
+From figure 5.2, we see that it is pretty common for a query test target only
+to have a median line and outliers. The query search is one example where
+we have the median and two outliers. However, figure 5.1 shows that there
+are over 10, 000 test cases for the search query, one of them is presented in
+listing 5.5. As mentioned above, this can be explained by the variables of the
+query, in this case, "comm", which is the user-entered search phrase used in
+44 | Results
+Figure 5.1: Test cases per query test target
+this query. The only dierence between many of the test cases is the variable;
+hence, the queried fields are the same, and therefore, the number of assertions
+is as well.
+These results show that AutoGraphQL can create test cases for dierent
+parts of the code and with dierent characteristics based on the logged queries.
+Results | 45
+Figure 5.2: Assertions per query test case for generated tests
+1 <?php
+2 declare ( st rict_type s =1) ;
+3
+4 namespace GraphQL ;
+5
+6 use PHPUnit \ Framework \ TestCase ;
+7 use Symfony \ Bundle \ FrameworkBundle \ Test \ WebTestCase ;
+8 use Symfony \ Component \ HttpFoundation \ Request ;
+9
+10 class P13240Q8eb23103c48855eba8d5ffff02e5acb6 extends WebTestCase
+11 {
+12 / 
+13  @runInSeparateProcess
+14  /
+15 public function testGraphQL ()
+16 {
+17 $client = static :: createClient () ;
+18 $que ry = <<< ’JSON ’
+19 { " query " : " query searchPageQuery ( $_v0_query : String ! , $_v1_page : Int ) { \ n search ( query : $_v0_query ,
+page : $_v1_page ) { \ n totalResults \ n query \ n resultItems { \ n i d \ n name \ n
+url \ n __typename \ n ... on CompanyResultItem { \ n tickerSymbol \ n __typename
+\ n } \ n ... on EventResultItem { \ n startTime \ n endTime \ n __typename
+\ n } \ n ... on VideoResultItem { \ n timestamp \ n __typename \ n } \ n
+... on ResearchArticleResultItem { \ n timestamp \ n authorName \ n authorTitle \ n
+type \ n __typename \ n } \ n } \ n __typename \ n } \ n } \ n " , " variables " : { " _v1_page
+" :1 , " _v0_query " : "comm" } , " operationName " : " searchPageQuery " }
+20 JSON ;
+21 $client ≠>request ( ’POST ’ , ’ / graphql / ’ , [] , [] , [ "CONTENT_TYPE" => ’ application / json ’ ] , $query ) ;
+22 $response = $client ≠>getResponse () ;
+23 $this ≠>assertEquals (200 , $response ≠>getStatusCode () ) ;
+24 $responseArray = json_decode ( $response ≠>getContent () , true ) ;
+25 $this ≠>assertIsArray ( $responseArray , ’ Response i s not valid JSON ’ ) ;
+26 $this ≠>assertArrayNotHasKey ( ’ errors ’ , $responseArray , ’ Response contains errors ’ ) ;
+27 $responseContent = $responseArray [ ’ data ’ ] ;
+28
+29 $this ≠>assertArrayHasKey ( ’ search ’ , $responseContent ) ;
+30 i f ( $responseContent [ ’ search ’ ]) {
+31 $this ≠>assertEquals ( ’ SearchResults ’ , $responseContent [ ’ search ’ ] [ ’ __typename ’ ]) ;
+32 $this ≠>assertArrayHasKey ( ’ totalResults ’ , $responseContent [ ’ search ’ ]) ;
+46 | Results
+33 $this ≠>assertNotNull ( $responseContent [ ’ search ’ ] [ ’ totalResults ’ ]) ;
+34 $this ≠>assertIsInt ( $responseContent [ ’ search ’ ] [ ’ totalResults ’ ]) ;
+35 $this ≠>assertArrayHasKey ( ’ query ’ , $responseContent [ ’ search ’ ]) ;
+36 $this ≠>assertNotNull ( $responseContent [ ’ search ’ ] [ ’ query ’ ]) ;
+37 $this ≠>assertIsString ( $responseContent [ ’ search ’ ] [ ’ query ’ ]) ;
+38 $this ≠>assertArrayHasKey ( ’ resultItems ’ , $responseContent [ ’ search ’ ]) ;
+39 $this ≠>assertNotNull ( $responseContent [ ’ search ’ ] [ ’ resultItems ’ ]) ;
+40 $this ≠>assertIsArray ( $responseContent [ ’ search ’ ] [ ’ resultItems ’ ]) ;
+41 for ( $g = 0; $g < count ( $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] ) ; $g++) {
+42 $this ≠>assertNotNull ( $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g ] ) ;
+43 $this ≠>assertContains ( $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g ] [ ’ __typename ’ ], [ ’
+CompanyResultItem ’ , ’ EventResultItem ’ , ’ VideoResultItem ’ , ’ ResearchArticleResultItem ’ ]) ;
+44 $this ≠>assertArrayHasKey ( ’ i d ’ , $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g ] ) ;
+45 $this ≠>assertNotNull ( $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g ] [ ’ i d ’ ]) ;
+46 $this ≠>assertIsString ( $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g ] [ ’ i d ’ ]) ;
+47 $this ≠>assertArrayHasKey ( ’ name ’ , $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g ] ) ;
+48 $this ≠>assertNotNull ( $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g ] [ ’ name ’ ]) ;
+49 $this ≠>assertIsString ( $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g ] [ ’ name ’ ]) ;
+50 $this ≠>assertArrayHasKey ( ’ url ’ , $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g ] ) ;
+51 i f ( $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g ] [ ’ url ’ ]) {
+52 $this ≠>assertIsString ( $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g ] [ ’ url ’ ]) ;
+53 }
+54 i f ( $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g ] [ ’ __typename ’ ] == ’ CompanyResultItem ’
+) {
+55 $this ≠>assertArrayHasKey ( ’ tickerSymbol ’ , $responseContent [ ’ search ’ ] [ ’ resultItems ’
+] [ $g ] ) ;
+56 i f ( $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g ] [ ’ tickerSymbol ’ ]) {
+57 $this ≠>assertIsString ( $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g ] [ ’
+tickerSymbol ’ ]) ;
+58 }
+59 }
+60 i f ( $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g ] [ ’ __typename ’ ] == ’ EventResultItem ’ )
+{
+61 $this ≠>assertArrayHasKey ( ’ startTime ’ , $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g
+]) ;
+62 $this ≠>assertNotNull ( $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g ] [ ’ startTime ’ ]) ;
+63 $this ≠>assertIsString ( $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g ] [ ’ startTime ’ ]) ;
+64 $this ≠>assertArrayHasKey ( ’ endTime ’ , $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g ] )
+;
+65 $this ≠>assertNotNull ( $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g ] [ ’ endTime ’ ]) ;
+66 $this ≠>assertIsString ( $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g ] [ ’ endTime ’ ]) ;
+67 }
+68 i f ( $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g ] [ ’ __typename ’ ] == ’ VideoResultItem ’ )
+{
+69 $this ≠>assertArrayHasKey ( ’ timestamp ’ , $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g
+]) ;
+70 $this ≠>assertNotNull ( $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g ] [ ’ timestamp ’ ]) ;
+71 $this ≠>assertIsString ( $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g ] [ ’ timestamp ’ ]) ;
+72 }
+73 i f ( $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g ] [ ’ __typename ’ ] == ’
+ResearchArticleResultItem ’ ) {
+74 $this ≠>assertArrayHasKey ( ’ timestamp ’ , $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g
+]) ;
+75 $this ≠>assertNotNull ( $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g ] [ ’ timestamp ’ ]) ;
+76 $this ≠>assertIsString ( $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g ] [ ’ timestamp ’ ]) ;
+77 $this ≠>assertArrayHasKey ( ’ authorName ’ , $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [
+$g ] ) ;
+78 $this ≠>assertNotNull ( $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g ] [ ’ authorName ’ ]) ;
+79 $this ≠>assertIsString ( $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g ] [ ’ authorName ’ ] )
+;
+80 $this ≠>assertArrayHasKey ( ’ authorTitle ’ , $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [
+$g ] ) ;
+81 $this ≠>assertNotNull ( $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g ] [ ’ authorTitle ’ ] )
+;
+82 $this ≠>assertIsString ( $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g ] [ ’ authorTitle ’
+]) ;
+83 $this ≠>assertArrayHasKey ( ’ type ’ , $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g ] ) ;
+84 $this ≠>assertNotNull ( $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g ] [ ’ type ’ ]) ;
+85 $this ≠>assertContains ( $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g ] [ ’ type ’ ], [ ’
+INITIATION_COVERAGE ’ , ’RESEARCH_UPDATE’ , ’RESEARCH_NOTE’ , ’PREMIUM_NEWS’ , ’THEME_REPORT’ , ’
+INTERVIEW ’ , ’PORTFOLIO_UPDATE ’ , ’PREMIUM_INTERVIEW’ , ’BUSINESS_COLUMN’ , ’PREMIUM_INSIGHT ’ , ’
+ALTERNATIVE_PICK ’ , ’FEATURED_ARTICLE ’ ]) ;
+86 }
+87 }
+88 }
+89 }
+90 }
+Listing 5.5: Generated PHPUnit test for search query
+Results | 47
+5.3 RQ3 - Coverage metrics
+The third research question aims to investigate the schema coverage and code
+coverage reached in Frontapp with the tests generated by AutoGraphQL.
+The generated test cases are executed in a prioritized fashion, firstly
+based on the number of times users have called a query and secondly how
+recently the queries were triggered. These values correspond to the fields
+times_called and updated_at of the query database, as explained in
+section 3.3. This means that the test with the highest priority is the query that
+has been called the most times. If two queries have been logged the same
+amount of times, the test case for the latest logged query will be prioritized.
+Figure 5.3 shows the cumulative code coverage for all executed tests, as
+well as the code coverage achieved by each test individually. The Y-axis
+shows the percentage of code covered, and the X-axis presents each test case
+in the order based on our prioritization strategy. The total code coverage
+achieved from the generated tests is approximately 30%, as seen in figure 5.3.
+After approximately 13, 600 test cases, the cumulative coverage increases
+from ⇡ 30.0% to ⇡ 30.4%. This is because of two test cases that are the
+first occurrence of their specific query types, which means that they trigger
+resolvers that have not been executed during earlier test cases. Most test cases
+achieve a code coverage of roughly 5%, but a few of them achieve around
+11%. One of them is test case no. 308, which has a 327-line long query as test
+input. This means that it is triggering many resolvers when executed, since it
+is querying many fields, which could explain the high coverage.
+Figure 5.4 shows the cumulative schema coverage obtained from all
+executed tests, as well as the schema coverage achieved by each test individually.
+The Y-axis shows the schema coverage, and the X-axis presents each test case
+and its execution order. The test cases were executed using the same priority
+order as above. The total schema coverage achieved is approximately 47%, as
+seen in figure 5.4. Test case no. 12, 334 increases the schema coverage from
+⇡ 45.9% to ⇡ 46.6%. This test case is the first occurrence of that specific
+query type, and therefore, covers new parts of the schema. Most test cases
+have a schema coverage of roughly 2  4%, but a few tests achieve a higher
+schema coverage of roughly 20%. One of them is test case no. 308, the same
+test case that reaches around 11% in code coverage. As explained above, the
+test case is a 327 line long query, where the queried fields belong to dierent
+objects, and therefore, covers a large part of the schema.
+Both figure 5.3 and figure 5.4 show that many test cases cover the same
+part of the codebase and the schema. However, this does not mean that they
+48 | Results
+Figure 5.3: Code coverage based on priority
+are redundant. For example, two similar queries with unique arguments can
+fetch dierent data objects, and therefore might find errors in that specific data
+object, but this will neither show an increase in the schema coverage nor the
+code coverage. Overall, it can be said with certainty that AutoGraphQL can
+successfully use logged queries to generate tests that are able to reach dierent
+regions of the code and the schema in Frontapp.
+5.4 RQ4 - Error findings
+The fourth research question is to investigate how many errors AutoGraphQL
+locates. Of the 24, 049 generated test cases, 157 failed. This means that they
+uncovered an error in Frontapp. There were 19 unique error messages among
+the 157 failed test cases, which means that some test cases triggered the same
+error. Since many of the test cases correspond to identical queries, except for
+the arguments, it is logical that a specific error can be triggered by more than
+one test case. One of the failing test cases is presented in listing 5.6 together
+with the fix in listing 5.7. The error message was: ’Undefined offset:
+0’, and occurred due to a non-nullable field having the value null. The
+Results | 49
+Figure 5.4: Schema coverage based on priority
+failing assertion is on line 14 in listing 5.6.
+When developers at Redeye investigated the failed test cases further, it was
+found that all errors but two were valid. The first invalid error seemed to have
+been caused due to a network error which occurred because of a disturbance
+when the test case was run, but it could likely also be the result of a complicated
+query making an underlying server unstable. The second failed test case which
+resulted in an invalid error was because of a known issue that was already
+handled by the developers and therefore, no longer represented a defect in the
+system. Accordingly, none of the errors showed any defects in AutoGraphQL.
+We discuss the nature of the valid errors found due to failing generated tests
+in more detail in section 6.2.
+50 | Results
+1 [...]
+2 $que ry = <<< ’JSON ’
+3 { " query " : " query searchPageQuery ( $_v0_query : String ! , $_v1_page : Int ) { \ n search ( query : $_v0_query ,
+page : $_v1_page ) { \ n totalResults \ n query \ n resultItems { \ n i d \ n name \ n
+url \ n __typename \ n ... on CompanyResultItem { \ n tickerSymbol \ n __typename
+\ n } \ n ... on EventResultItem { \ n startTime \ n endTime \ n __typename
+\ n } \ n ... on VideoResultItem { \ n timestamp \ n __typename \ n } \ n
+... on ResearchArticleResultItem { \ n timestamp \ n authorName \ n authorTitle \ n
+type \ n __typename \ n } \ n } \ n __typename \ n } \ n } \ n " , " variables " : { " _v1_page
+" :1 , " _v0_query " : " bubbl " } , " operationName " : " searchPageQuery " }
+4 JSON ;
+5
+6 $client ≠>request ( ’POST ’ , ’ / graphql / ’ , [] , [] , [ "CONTENT_TYPE" => ’ application / json ’ ] , $query ) ;
+7 $response = $client ≠>getResponse () ;
+8 [...]
+9 i f ( $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g ] [ ’ __typename ’ ] == ’
+ResearchArticleResultItem ’ ) {
+10 $this ≠>assertArrayHasKey ( ’ timestamp ’ , $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g
+]) ;
+11 $this ≠>assertNotNull ( $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g ] [ ’ timestamp ’ ]) ;
+12 $this ≠>assertIsString ( $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g ] [ ’ timestamp ’ ]) ;
+13 $this ≠>assertArrayHasKey ( ’ authorName ’ , $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [
+$g ] ) ;
+14 $this ≠>assertNotNull ( $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g ] [ ’ authorName ’ ]) ;
+15 $this ≠>assertIsString ( $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g ] [ ’ authorName ’ ] )
+;
+16 $this ≠>assertArrayHasKey ( ’ authorTitle ’ , $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [
+$g ] ) ;
+17 [...]
+Listing 5.6: Failing test case
+1 @@ ≠0 +2 @@
+2 + i f ( is_array ( $source [ ’ authorIds ’]) && count ( $source [ ’ authorIds ’]) > 0 ) {
+3 i f ( Uuid :: isValid ( $source [ ’ authorIds ’ ] [ 0 ] ) ) {
+4 $firstAuthor = $this ≠>employeeRepository ≠>findByUuid (
+5 Uuid :: fromString ( $source [ ’ authorIds ’ ] [ 0 ] )
+6 ) ;
+7 i f ( $ f i r s t A u t h o r && $ f i r s t A u t h o r ≠>getTitle () ) {
+8 $authorTitle = $firstAuthor ≠>getTitle () ;
+9 }
+10 }
+11 + }
+Listing 5.7: Fix for failing test case in listing 5.6
+5.5 RQ5 - Documented errors
+The fifth and last research question investigates how many of the errors
+documented in the data collection are found by tests generated with
+AutoGraphQL.
+Of the five documented errors from the data collection (recall section 5.1),
+AutoGraphQL found three errors. Developers had resolved the other two
+errors during the period between the data collection phase and the test
+execution. However, one of the errors would have been found by AutoGraphQL
+if it would still exist, because the database contained the query that triggered
+the error; hence AutoGraphQL had in fact created a valid test that would have
+found the error had it still existed. This test is shown in listing 5.8. The error
+message was: Invalid article type theme_report, and was due
+to a new feature which had not been implemented in the search function at that
+Results | 51
+time. The failing assertion is presented at line 23 in listing 5.8. However, at
+the time when the error occurred, THEME_REPORT did not exist in the list.
+The presented test case shows that not only is AutoGraphQL capable of
+detecting valid errors, but the errors it detects actually disrupt the production
+environment, and are therefore actionable errors that may need to be fixed.
+1 [...]
+2
+3 $que ry = <<< ’JSON ’
+4 { " query " : " query searchPageQuery ( $_v0_query : String ! , $_v1_page : Int ) { \ n search ( query : $_v0_query ,
+page : $_v1_page ) { \ n totalResults \ n query \ n resultItems { \ n i d \ n name \ n
+url \ n __typename \ n ... on CompanyResultItem { \ n tickerSymbol \ n __typename
+\ n } \ n ... on EventResultItem { \ n startTime \ n endTime \ n __typename
+\ n } \ n ... on VideoResultItem { \ n timestamp \ n __typename \ n } \ n
+... on ResearchArticleResultItem { \ n timestamp \ n authorName \ n authorTitle \ n
+type \ n __typename \ n } \ n } \ n __typename \ n } \ n } \ n " , " variables " : { " _v1_page
+" :1 , " _v0_query " : " ac " } , " operationName " : " searchPageQuery " }
+5 JSON ;
+6
+7 $client ≠>request ( ’POST ’ , ’ / graphql / ’ , [] , [] , [ "CONTENT_TYPE" => ’ application / json ’ ] , $query ) ;
+8 $response = $client ≠>getResponse () ;
+9 [...]
+10 i f ( $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g ] [ ’ __typename ’ ] == ’
+ResearchArticleResultItem ’ ) {
+11 $this ≠>assertArrayHasKey ( ’ timestamp ’ , $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g
+]) ;
+12 $this ≠>assertNotNull ( $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g ] [ ’ timestamp ’ ]) ;
+13 $this ≠>assertIsString ( $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g ] [ ’ timestamp ’ ]) ;
+14 $this ≠>assertArrayHasKey ( ’ authorName ’ , $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [
+$g ] ) ;
+15 $this ≠>assertNotNull ( $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g ] [ ’ authorName ’ ]) ;
+16 $this ≠>assertIsString ( $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g ] [ ’ authorName ’ ] )
+;
+17 $this ≠>assertArrayHasKey ( ’ authorTitle ’ , $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [
+$g ] ) ;
+18 $this ≠>assertNotNull ( $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g ] [ ’ authorTitle ’ ] )
+;
+19 $this ≠>assertIsString ( $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g ] [ ’ authorTitle ’
+]) ;
+20 $this ≠>assertArrayHasKey ( ’ type ’ , $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g ] ) ;
+21 $this ≠>assertNotNull ( $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g ] [ ’ type ’ ]) ;
+22 $this ≠>assertContains ( $responseContent [ ’ search ’ ] [ ’ resultItems ’ ] [ $g ] [ ’ type ’ ], [ ’
+INITIATION_COVERAGE ’ , ’RESEARCH_UPDATE’ , ’RESEARCH_NOTE’ , ’PREMIUM_NEWS’ , ’THEME_REPORT’ , ’
+INTERVIEW ’ , ’PORTFOLIO_UPDATE ’ , ’PREMIUM_INTERVIEW’ , ’BUSINESS_COLUMN’ , ’PREMIUM_INSIGHT ’ , ’
+ALTERNATIVE_PICK ’ , ’FEATURED_ARTICLE ’ ]) ;
+23 }
+24 }
+25 }
+26 }
+27 }
+Listing 5.8: Test case finding error
+Chapter 6
+Discussion
+In this chapter, we discuss the results obtained from the use of AutoGraphQL
+to generate tests. First, we discuss the coverage metrics presented in section 5.3
+and some of the failing test cases. Then, we discuss potential privacy
+issues introduced from AutoGraphQL to generate tests, the execution time for
+generated tests, and the future use of AutoGraphQL at Redeye. Lastly, general
+threats to validity are discussed.
+6.1 Schema and code coverage
+The metrics presented in section 5.3 indicate a sharp increase in coverage that
+flattens after the execution of approximately 2000 test cases with the highest
+priority. The cumulative code coverage obtained with all the tests reaches
+just above 30%, and the schema coverage reaches almost 47%. Worth noting
+is that both kinds of coverage are measured towards the same code base and
+schema, even though the test cases are based upon queries logged for 33 days.
+Any changes made to the system during the period between query logging and
+coverage measurement are not taken into account. The resultant coverage does
+not get aected by this, but individual test cases could reach a higher coverage
+than presented in the graphs if the codebase or schema were smaller at the
+point when the query was logged.
+As mentioned in section 4.3.1, some functions of Frontapp are implemented
+with REST API. This is another factor which contributes to the code coverage
+of just 30%. Another reason for the relatively low code coverage, compared
+to the number of test cases executed, is that a lot of the code base is frontendcode, which is not reached by a GraphQL request or response. In an interview
+with the tech-lead at Redeye, he speculated that approximately 20% of the
+52
+Discussion | 53
+codebase may be deprecated, which also explains the value of the code
+coverage achieved with the generated tests.
+We also discussed the results for the schema coverage during our interview
+with the tech-lead. He clarified that the Frontapp developers have added some
+types and fields in the GraphQL schema in advance because planned future
+features might need them. This could explain the resulting schema coverage
+of 47%. Other parts of the schema are not used because the data is currently
+handled through REST API requests but will be handled through GraphQL
+in the future, when Redeye is phasing out its REST implementation. Other
+types are parts of larger refactoring eorts or new features that have not been
+performed yet but are planned in the future.
+6.2 Failing test cases
+When executing the 24, 049 generated test cases, a total of 157 tests fail,
+showing that AutoGraphQL successfully generates test cases capable of finding
+valid errors. Of the 19 unique error messages mentioned in section 5.4 which
+correspond to these failing test cases, the developers identified 8 distinct
+software defects in Frontapp. Some of these errors can be categorized as query
+errors, such as incorrectly written queries executed through GraphiQL (a tool
+presented in section 2.2.5) by developers connected to the production database,
+which logs the query in the wrong database, as discussed in section 3.3. Some
+of these errors are located in the code base of Frontapp, where the query
+contains a type mismatch and gives the incorrect input type, such as an integer
+being sent as input to a method that expects a string. In contrast, others
+could be queries executed manually by developers once through GraphiQL and
+are, therefore, not obvious defects in Frontapp. A reoccurring defect type is
+incorrect assumptions of return types, for example, a nullable variable being
+sent as input to a method that cannot handle null as input, or collecting an
+element in a nullable array without checking for null first. Another detected
+defect is an incorrect return type, for example, a method returning a dierent
+type than stated in the code.
+In section 3.3 we discuss whether to log queries in two dierent databases
+based on what environment it was executed in: production or stage. By
+separating the environments, developers can create test cases for new features
+by pushing their code to the stage environment and interact with the change
+they did. This requires that the developer is connected to the correct database.
+We discovered during the thesis that some of the developers were connected
+to the production database when interacting with the local environment. This
+54 | Discussion
+logged their queries in the incorrect database and made many test cases fail
+when testing the tool because it required parts of the schema that did not exist
+in the production code. We could see that a lot of the failing queries were
+querying the same feature. We checked out the git branch containing that
+feature and created a check in AutoGraphQL that test cases were not created
+for non-existing parts of the schema so that only real incorrect test cases would
+fail.
+6.3 Privacy
+One challenge with logging queries executed by end-users in Frontapp is a
+possible privacy breach. As mentioned in related work [32] privacy issues can
+occur when systems are monitored in production, as it runs under a workload
+that may contain sensitive information, such as user names and passwords.
+However, with AutoGraphQL, no user-specific data is sent through the query
+arguments and we do not log the response. Privacy concerns are therefore
+not applicable for this thesis. Furthermore, the logged query is sent through a
+request from within the generated test, and the response is also obtained within
+the test case, meaning that the query does not exist outside of the test case, and
+the response only exists during the execution.
+6.4 Execution time
+Executing all generated test cases without calculating the code coverage took
+approximately 114 hours. The test cases were separated into five batches
+during execution. The first batch contained roughly 10000 tests and had a
+runtime of almost 80 hours. The long runtime was because we wrote the
+result to a text file and the terminal simultaneously. We believe that this more
+than doubled the runtime. The following four batches were smaller (around
+3000 test cases each) and took about 10 hours. Executing all test cases while
+calculating the code coverage took approximately 221 hours.
+Redeye plans to add test cases to a CI/CD pipeline triggered by code pushes
+to the main branch and opening of pull requests. We will discuss this further in
+section 6.5 below. To add all existing test cases to a CI/CD pipeline and execute
+them regularly is not reasonable time-wise. Therefore, we have investigated
+the coverage achieved by the test cases with the highest priority, compared to
+a test run time which is reasonable enough to serve as a quality check before
+merging new code into the codebase.
+Discussion | 55
+Figure 6.1 shows the code coverage, the schema coverage, and the run
+time for 200 tests with the highest assigned priorities. The X-axis represents
+the test cases, the left Y-axis represents the coverage, and the right Y-axis
+represents the run time of the test, in minutes. As the figure shows, the run
+time increases with the number of executed tests, while the schema coverage
+and code coverage peak around 50 tests. This indicates that if high coverage
+is the goal while running tests in a CI/CD pipeline, more tests are not merrier.
+Figure 6.1 shows that such a pipeline could be as short as 3 minutes and still
+reach a schema coverage of 25% and code coverage of 22%.
+Figure 6.1: Code and schema coverage together with run time
+6.5 Tool integration
+Redeye plans to implement AutoGraphQL to all of their applications using
+GraphQL as an API and add generated test cases to a CI/CD pipeline for that
+application. The pipeline will be triggered by each code push to the main
+branch and the opening of pull requests. Redeye will prioritize the test cases
+to use in the pipeline based on their popularity (times called) and the last
+time they were called, together with a manual prioritization. The manual
+56 | Discussion
+prioritization will be based on information that developers know about the
+code base, such as if a query is irrelevant to test more than once, no matter
+the arguments, or that one query should run for each possible argument. An
+example of a query to test for each possible argument is to test each existing
+company in the database. They also plan to run at least one test case for each
+existing operation name.
+The set of PHPUnit-files generated by AutoGraphQL will be integrated
+into the CI/CD pipeline and manually replaced with new test files as required.
+Redeye does not plan to do any manual modification or inspection of the
+generated test cases themselves, after the integration of AutoGraphQL. In the
+event of a failed test case, it will be investigated why it failed and if the test
+case is relevant, for example, if the object it is testing still exists in the database.
+If the test is not relevant anymore, Redeye will remove the test case from the
+pipeline, and the logged query will be removed from the database so that no
+other test cases can be generated from it.
+6.6 Threats to validity
+The main external threat to validity is that our study is specific to Frontapp,
+which means that the findings are not directly applicable to other case studies.
+However, AutoGraphQL can be used with any other project which uses a
+GraphQL implementation for its API, regardless of the presence of an existing
+test suite, and can generate tests using the queries logged from production.
+The main threat to internal validity arises from the fact that the generated
+tests verify the properties specified in the GraphQL schema, and therefore
+assumes that this schema is correct. Moreover, all unique queries logged serve
+as test inputs for the generated tests, but it is likely that these queries still
+miss various usage scenarios of the system. This is countered by the fact that
+AutoGraphQL can be seamlessly integrated in production, and can be used by
+any number of users interacting with the system in diverse ways.
+Apart from these concerns, there also exist factors related to the aspect of
+failing test cases. As mentioned in section 3.4.2, the assertions for float types
+had to be changed from assertIsFloat to assertIsNumeric, because
+PHP encodes some JSON-encoded floats as integers. assertIsNumeric is
+true for floats and integers, making falsely entered integers pass to float typedfields when incorrect. This means that the number of failed test cases could be
+higher than the presented value in this thesis. Moreover, whenever an assertion
+is not met in a generated test, the test fails, and the rest of the assertions are not
+run. This means that in the 157 failing test cases, there could be other failing
+Discussion | 57
+assertions detecting other defects in Frontapp. This also means that failing
+tests may otherwise also contain valid assertions. Another possible issue that
+has been discussed with Redeye is the fact that the database for logged queries
+is never emptied. This could mean that a query requesting a specific object that
+exists when the query is run will fail if the requested object is removed from its
+database. However, Redeye states that this will most likely not happen since
+they rarely delete anything from their databases and therefore do not need a
+procedure to filter among the logged queries.
+Chapter 7
+Conclusions and Future work
+This chapter describes the conclusion of this thesis and suggestions for future
+work.
+7.1 Conclusions
+Ever since GraphQL, a query language for Application Programming Interfaces
+(APIs), was open-sourced in 2015 [1], the usage has increased rapidly. In
+2019, almost 40% of developers had used it [2]. However, the tools and
+techniques for automatically creating test suites are few.
+This thesis investigated existing software defects in Redeye’s system,
+Frontapp, where it was found that a significant amount was connected to
+GraphQL. Based on the nature of errors in Frontapp, this thesis presented a
+technique and a tool called AutoGraphQL for automated test generation for
+GraphQL APIs. The technique logs all unique queries executed while endusers interact with the website and uses the queries as test input in the generated
+test cases. The queries are then used together with the GraphQL schema to
+create test oracles. The test input is sent in an HTTP request towards the
+GraphQL API, and the test oracles test the types of the fields in the response,
+such as string, integer, and object.
+Queries were logged for 33 days before tests were generated. It resulted
+in over 24,000 generated test cases, with over 8, 000, 000 executed assertions,
+code coverage of 30%, and schema coverage of 47%. The generated test cases
+managed to detect eight distinct software defects in Frontapp, where 3 of them
+were identified in the defect investigation before implementing AutoGraphQL.
+A total of 157 test cases failed because of errors in the system. When
+investigating the failed test cases, it was found that all failing causes but two
+58
+Conclusions and Future work | 59
+were valid. The first invalid error was due to a network error during the
+test execution. The other one was already fixed, and therefore not a defect
+anymore, which means that none of the errors were due to any defect in
+AutoGraphQL.
+This thesis shows that using logged end-user interactions to create test
+cases is both ecient through a developer’s point-of-view and a defectdetecting point-of-view.
+7.2 Future work
+This study was performed using an industrial case study developed in the PHP
+framework, Symfony. However, it would be of interest to see if AutoGraphQL
+is also useful in generating tests for applications not developed in PHP. Future
+work could implement AutoGraphQL for other case studies and investigate and
+compare the findings to the results of this thesis. It could also be of interest to
+generate test cases in other programming languages than PHP to be matched
+with the SUT, and developers would not need to understand another language.
+One of the limitations of this study is the focus on queries, but not
+mutations. Therefore, future work could investigate the possibility of generating
+test cases for GraphQL mutations in addition to queries.
+Over 24, 000 test cases were executed, and results show that this was both
+time-consuming and redundant coverage-wise. Future work could therefore
+investigate test minimization as well as other prioritizing approaches to use a
+small but ecient amount of tests in a CI/CD pipeline.
+Another proposed future work is to use the technique in this thesis to
+investigate bloating in a system’s codebase and explore which parts of the
+codebase are actually used in production.
+References
+[1] Graphql foundation, 2021. URL https://graphql.org/
+foundation/.
+[2] State of JavaScript. Graphql experience over time, 2019. URL
+https://2019.stateofjs.com/data-layer/graphql/
+#graphql_experience.
+[3] Who is using graphql?, 2021. URL https://graphql.org/
+users.
+[4] Gleison Brito, Thaís Mombach, and Marco Tulio Valente. Migrating
+to graphql: A practical assessment. In Xinyu Wang, David Lo, and
+Emad Shihab, editors, 26th IEEE International Conference on Software
+Analysis, Evolution and Reengineering, SANER 2019, Hangzhou, China,
+February 24-27, 2019, pages 140–150. IEEE, 2019. doi: 10.
+1109/SANER.2019.8667986. URL https://doi.org/10.1109/
+SANER.2019.8667986.
+[5] Gleison Brito and Marco Tulio Valente. REST vs graphql: A controlled
+experiment. In 2020 IEEE International Conference on Software
+Architecture, ICSA 2020, Salvador, Brazil, March 16-20, 2020, pages
+81–91. IEEE, 2020. doi: 10.1109/ICSA47634.2020.00016. URL
+https://doi.org/10.1109/ICSA47634.2020.00016.
+[6] Daniela Meneses Vargas, Alison Fernandez Blanco, Andreina Cota
+Vidaurre, Juan Pablo Sandoval Alcocer, Milton Mamani Torres,
+A. Bergel, and Stéphane Ducasse. Deviation testing: A test case
+generation technique for graphql apis. 2018.
+[7] Stefan Karlsson, Adnan Causevic, and Daniel Sundmark. Automatic
+property-based testing of graphql apis. CoRR, abs/2012.07380, 2020.
+URL https://arxiv.org/abs/2012.07380.
+60
+REFERENCES | 61
+[8] Ward Cunningham. The wycash portfolio management system. OOPS
+Messenger, 4(2):29–30, 1993. doi: 10.1145/157710.157715. URL
+https://doi.org/10.1145/157710.157715.
+[9] F. Hirsch, J. Kemp, and J. Ilkka. Mobile Web Services: Architecture and
+Implementation. Wiley, 2007. ISBN 9780470032596. URL https:
+//books.google.se/books?id=v5f0ORBgd5IC.
+[10] Alexander Davis and Du Zhang. A comparative study of DCOM
+and SOAP. In 4th International Symposium on Multimedia Software
+Engineering, ISMSE 2002, Newport Beach, CA, USA, December 11-
+13, 2002, pages 48–55. IEEE Computer Society, 2002. doi: 10.
+1109/MMSE.2002.1181595. URL https://doi.org/10.1109/
+MMSE.2002.1181595.
+[11] Roy Thomas Fielding and Richard N. Taylor. Architectural Styles and
+the Design of Network-Based Software Architectures. PhD thesis, 2000.
+AAI9980887.
+[12] Olaf Hartig and Jorge Pérez. An initial analysis of facebook’s graphql
+language. In Juan L. Reutter and Divesh Srivastava, editors, Proceedings
+of the 11th Alberto Mendelzon International Workshop on Foundations of
+Data Management and the Web, Montevideo, Uruguay, June 7-9, 2017,
+volume 1912 of CEUR Workshop Proceedings. CEUR-WS.org, 2017.
+URL http://ceur-ws.org/Vol-1912/paper11.pdf.
+[13] Graphql meta fields, 2021. URL https://graphql.org/learn/
+queries/#meta-fields.
+[14] Graphql operation name, 2021. URL https://graphql.org/
+learn/queries/#operation-name.
+[15] Graphql execution, 2021. URL https://graphql.org/learn/
+execution/.
+[16] Bertrand Meyer. Eiel: A language and environment for software
+engineering. J. Syst. Softw., 8(3):199–246, 1988. doi: 10.1016/
+0164-1212(88)90022-2. URL https://doi.org/10.1016/
+0164-1212(88)90022-2.
+[17] Ieee standard glossary of software engineering terminology. IEEE Std
+610.12-1990, pages 1–84, 1990. doi: 10.1109/IEEESTD.1990.101064.
+62 | REFERENCES
+[18] Richard A. DeMillo, Richard J. Lipton, and Frederick G. Sayward. Hints
+on test data selection: Help for the practicing programmer. Computer,
+11(4):34–41, 1978. doi: 10.1109/C-M.1978.218136. URL https:
+//doi.org/10.1109/C-M.1978.218136.
+[19] W Heidler, J Benson, R Meeson, A Kerbel, and A Pyster. Software
+testing measures. Technical report, GENERAL RESEARCH CORP
+SANTA BARBARA CA, 1982.
+[20] Mathias Meyer. Continuous integration and its tools. IEEE Softw., 31(3):
+14–16, 2014. doi: 10.1109/MS.2014.58. URL https://doi.org/
+10.1109/MS.2014.58.
+[21] Arrays, 2021. URL https://www.php.net/manual/en/
+language.types.array.php.
+[22] Saswat Anand, Edmund K. Burke, Tsong Yueh Chen, John A. Clark,
+Myra B. Cohen, Wolfgang Grieskamp, Mark Harman, Mary Jean
+Harrold, and Phil McMinn. An orchestrated survey of methodologies
+for automated software test case generation. J. Syst. Softw., 86(8):1978–
+2001, 2013. doi: 10.1016/j.jss.2013.02.061. URL https://doi.
+org/10.1016/j.jss.2013.02.061.
+[23] Robert Binder. Testing object-oriented systems: models, patterns, and
+tools. Addison-Wesley Professional, 2000.
+[24] Siddhartha R. Dalal, Ashish Jain, Nachimuthu Karunanithi, J. M. Leaton,
+Christopher M. Lott, Gardner C. Patton, and Bruce M. Horowitz. Modelbased testing in practice. In Barry W. Boehm, David Garlan, and Je
+Kramer, editors, Proceedings of the 1999 International Conference on
+Software Engineering, ICSE’ 99, Los Angeles, CA, USA, May 16-22,
+1999, pages 285–294. ACM, 1999. doi: 10.1145/302405.302640. URL
+https://doi.org/10.1145/302405.302640.
+[25] University of Wisconsin-Madison Computer Sciences Department. Fall
+1988 cs736 project list, 1988. URL http://pages.cs.wisc.
+edu/~bart/fuzz/CS736-Projects-f1988.pdf.
+[26] Barton P. Miller, Lars Fredriksen, and Bryan So. An empirical study of
+the reliability of UNIX utilities. Commun. ACM, 33(12):32–44, 1990.
+doi: 10.1145/96267.96279. URL https://doi.org/10.1145/
+96267.96279.
+REFERENCES | 63
+[27] Sergio Segura, Dave Towey, Zhi Quan Zhou, and Tsong Yueh Chen.
+Metamorphic testing: Testing the untestable. IEEE Softw., 37(3):46–53,
+2020. doi: 10.1109/MS.2018.2875968. URL https://doi.org/
+10.1109/MS.2018.2875968.
+[28] Phil McMinn. Search-based software test data generation: a survey.
+Softw. Test. Verification Reliab., 14(2):105–156, 2004. doi: 10.1002/
+stvr.294. URL https://doi.org/10.1002/stvr.294.
+[29] Mark Harman, Yue Jia, and Yuanyuan Zhang. Achievements, open
+problems and challenges for search based software testing. In 8th
+IEEE International Conference on Software Testing, Verification and
+Validation, ICST 2015, Graz, Austria, April 13-17, 2015, pages 1–12.
+IEEE Computer Society, 2015. doi: 10.1109/ICST.2015.7102580. URL
+https://doi.org/10.1109/ICST.2015.7102580.
+[30] Phil McMinn. Search-based software testing: Past, present and future. In
+Fourth IEEE International Conference on Software Testing, Verification
+and Validation, ICST 2012, Berlin, Germany, 21-25 March, 2011,
+Workshop Proceedings, pages 153–163. IEEE Computer Society, 2011.
+doi: 10.1109/ICSTW.2011.100. URL https://doi.org/10.
+1109/ICSTW.2011.100.
+[31] Benny Pasternak, Shmuel S. Tyszberowicz, and Amiram Yehudai.
+Genutest: A unit test and mock aspect generation tool. In Karen
+Yorav, editor, Hardware and Software: Verification and Testing, Third
+International Haifa Verification Conference, HVC 2007, Haifa, Israel,
+October 23-25, 2007, Proceedings, volume 4899 of Lecture Notes in
+Computer Science, pages 252–266. Springer, 2007. doi: 10.1007/
+978-3-540-77966-7\_20. URL https://doi.org/10.1007/
+978-3-540-77966-7_20.
+[32] Deepika Tiwari, Long Zhang, Martin Monperrus, and Benoit Baudry.
+Production monitoring to improve test suites. CoRR, abs/2012.01198,
+2020. URL https://arxiv.org/abs/2012.01198.
+[33] Yujun Wang, Supiti Buranawatanachoke, Romain Colle, Karl Dias,
+Leonidas Galanis, Stratos Papadomanolakis, and Uri Shaft. Real
+application testing with database replay. In Benoît Dageville and Carsten
+Binnig, editors, Proceedings of the 2nd International Workshop on
+Testing Database Systems, DBTest 2009, Providence, Rhode Island,
+64 | REFERENCES
+USA, June 29, 2009. ACM, 2009. doi: 10.1145/1594156.1594166. URL
+https://doi.org/10.1145/1594156.1594166.
+[34] Shadi Abdul Khalek, Bassem Elkarablieh, Yai O. Laleye, and Sarfraz
+Khurshid. Query-aware test generation using a relational constraint
+solver. In 23rd IEEE/ACM International Conference on Automated
+Software Engineering (ASE 2008), 15-19 September 2008, L’Aquila,
+Italy, pages 238–247. IEEE Computer Society, 2008. doi: 10.1109/ASE.
+2008.34. URL https://doi.org/10.1109/ASE.2008.34.
+[35] Shadi Abdul Khalek and Sarfraz Khurshid. Automated SQL query
+generation for systematic testing of database engines. In Charles
+Pecheur, Jamie Andrews, and Elisabetta Di Nitto, editors, ASE 2010,
+25th IEEE/ACM International Conference on Automated Software
+Engineering, Antwerp, Belgium, September 20-24, 2010, pages 329–
+332. ACM, 2010. doi: 10.1145/1858996.1859063. URL https:
+//doi.org/10.1145/1858996.1859063.
+[36] Antonia Bertolino, Jinghua Gao, Eda Marchetti, and Andrea Polini.
+Automatic test data generation for XML schema-based partition testing.
+In Hong Zhu, W. Eric Wong, and Amit M. Paradkar, editors, Proceedings
+of the Second International Workshop on Automation of Software Test,
+AST 2007, Minneapolis, MN, USA, May 26-26, 2007, pages 10–16. IEEE
+Computer Society, 2007. doi: 10.1109/AST.2007.6. URL https:
+//doi.org/10.1109/AST.2007.6.
+[37] Benjamin Danglot, Oscar Vera-Perez, Zhongxing Yu, Andy Zaidman,
+Martin Monperrus, and Benoit Baudry. A snowballing literature study
+on test amplification. J. Syst. Softw., 157, 2019. doi: 10.1016/
+j.jss.2019.110398. URL https://doi.org/10.1016/j.jss.
+2019.110398.
+[38] Bent Flyvbjerg. Five misunderstandings about case-study
+research. Qualitative Inquiry, 12:219–245, 04 2006. doi:
+10.1177/1077800405284363.
+
+www.kth.se
+TRITA -EECS-EX-2021:537

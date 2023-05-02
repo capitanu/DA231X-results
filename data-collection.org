@@ -5,7 +5,68 @@
 * Rust Ansi Term
 ** src/style.rs
 *** colour_serialization
-**** command
+**** command_new_function
+***** command
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+	  "./new_function.sh src/style.rs && \
+	  warp test \
+	  src/style.rs colour_serialization \
+	  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "./new_function.sh src/style.rs && \
+	  cargo test colour_serialization --features derive_serde_style" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../org-data/rust_ansi_term-src_style-colour_serialization==new-function.org \
+	  --export-json ../json-data/rust_ansi_term-src_style-colour_serialization==mo.json
+#+end_src
+***** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/rust_ansi_term-src_style-colour_serialization.json \
+		  --labels warp,cargo \
+		  -o plots/plot_whisker_rust_ansi_term-src_style-colour_serialization.png
+#+end_src
+***** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/rust_ansi_term-src_style-colour_serialization.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_rust_ansi_term-src_style-colour_serialization.png
+#+end_src
+**** command_modify_function
+***** command
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+	  "./modify_function.sh 513 src/style.rs && \
+	  warp test \
+	  src/style.rs colour_serialization \
+	  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "./modify_function.sh 513 src/style.rs && \
+	  cargo test colour_serialization --features derive_serde_style" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../org-data/rust_ansi_term-src_style-colour_serialization==modify-function.org \
+	  --export-json ../json-data/rust_ansi_term-src_style-colour_serialization==mo.json
+#+end_src
+***** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/rust_ansi_term-src_style-colour_serialization.json \
+		  --labels warp,cargo \
+		  -o plots/plot_whisker_rust_ansi_term-src_style-colour_serialization.png
+#+end_src
+***** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/rust_ansi_term-src_style-colour_serialization.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_rust_ansi_term-src_style-colour_serialization.png
+#+end_src
+**** command_comment
+***** command
 #+begin_src sh
   hyperfine \
 	  --command-name warp \
@@ -20,14 +81,14 @@
 	  --export-orgmode ../org-data/rust_ansi_term-src_style-colour_serialization.org \
 	  --export-json ../json-data/rust_ansi_term-src_style-colour_serialization.json
 #+end_src
-**** plot whisker
+***** plot whisker
 #+begin_src sh
   python3 plot_whisker.py \
 		  json-data/rust_ansi_term-src_style-colour_serialization.json \
 		  --labels warp,cargo \
 		  -o plots/plot_whisker_rust_ansi_term-src_style-colour_serialization.png
 #+end_src
-**** plot histogram
+***** plot histogram
 #+begin_src sh
   python3 plot_histogram.py \
 		  json-data/rust_ansi_term-src_style-colour_serialization.json \
@@ -35,7 +96,68 @@
 		  -o plots/plot_hist_rust_ansi_term-src_style-colour_serialization.png
 #+end_src
 *** colour_deserialization
-**** command
+**** command_new_function
+***** command
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+	  "./new_function.sh src/style.rs && \
+	  warp test \
+	  src/style.rs colour_deserialization \
+	  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "./new_function.sh src/style.rs && \
+	  cargo test colour_deserialization --features derive_serde_style" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../org-data/rust_ansi_term-src_style-colour_deserialization==new-function.org \
+	  --export-json ../json-data/rust_ansi_term-src_style-colour_deserialization==new-function.json
+#+end_src
+***** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/rust_ansi_term-src_style-colour_deserialization.json \
+		  --labels warp,cargo \
+		  -o  plots/plot_whisker_rust_ansi_term-src_style-colour_deserialization.png
+#+end_src
+***** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/rust_ansi_term-src_style-colour_deserialization.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_rust_ansi_term-src_style-colour_deserialization.png
+#+end_src
+**** command_modify_function
+***** command
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+	  "./modify_function.sh 494 src/style.rs && \
+	  warp test \
+	  src/style.rs colour_deserialization \
+	  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "./modify_function.sh 494 src/style.rs && \
+	  cargo test colour_deserialization --features derive_serde_style" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../org-data/rust_ansi_term-src_style-colour_deserialization==modify-function.org \
+	  --export-json ../json-data/rust_ansi_term-src_style-colour_deserialization==modify-function.json
+#+end_src
+***** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/rust_ansi_term-src_style-colour_deserialization.json \
+		  --labels warp,cargo \
+		  -o  plots/plot_whisker_rust_ansi_term-src_style-colour_deserialization.png
+#+end_src
+***** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/rust_ansi_term-src_style-colour_deserialization.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_rust_ansi_term-src_style-colour_deserialization.png
+#+end_src
+**** command_comment
+***** command
 #+begin_src sh
   hyperfine \
 	  --command-name warp \
@@ -50,14 +172,14 @@
 	  --export-orgmode ../org-data/rust_ansi_term-src_style-colour_deserialization.org \
 	  --export-json ../json-data/rust_ansi_term-src_style-colour_deserialization.json
 #+end_src
-**** plot whisker
+***** plot whisker
 #+begin_src sh
   python3 plot_whisker.py \
 		  json-data/rust_ansi_term-src_style-colour_deserialization.json \
 		  --labels warp,cargo \
 		  -o  plots/plot_whisker_rust_ansi_term-src_style-colour_deserialization.png
 #+end_src
-**** plot histogram
+***** plot histogram
 #+begin_src sh
   python3 plot_histogram.py \
 		  json-data/rust_ansi_term-src_style-colour_deserialization.json \
@@ -65,7 +187,68 @@
 		  -o plots/plot_hist_rust_ansi_term-src_style-colour_deserialization.png
 #+end_src
 *** style_serialization
-**** command
+**** command_new_function
+***** command
+#+begin_src sh
+	hyperfine \
+		--command-name warp \
+		"./new_function.sh src/style.rs && \
+		warp test \
+		src/style.rs style_serialization \
+		--public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+		--command-name cargo \
+		"./new_function.sh src/style.rs && \	
+		cargo test style_serialization --features derive_serde_style" \
+		--warmup 50 --runs 100 \
+		--export-orgmode ../org-data/rust_ansi_term-src_style-style_serialization==new-function.org \
+		--export-json ../json-data/rust_ansi_term-src_style-style_serialization==new-function.json
+#+end_src
+***** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/rust_ansi_term-src_style-style_serialization.json \
+		  --labels warp,cargo \
+		  -o  plots/plot_whisker_rust_ansi_term-src_style-style_serialization.png
+#+end_src
+***** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/rust_ansi_term-src_style-style_serialization.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_rust_ansi_term-src_style-style_serialization.png
+#+end_src
+**** command_modify_function
+***** command
+#+begin_src sh
+	hyperfine \
+		--command-name warp \
+		"./modify_function.sh 512 src/style.rs && \
+		warp test \
+		src/style.rs style_serialization \
+		--public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+		--command-name cargo \
+		"./modify_function.sh 512 src/style.rs && \	
+		cargo test style_serialization --features derive_serde_style" \
+		--warmup 50 --runs 100 \
+		--export-orgmode ../org-data/rust_ansi_term-src_style-style_serialization==modify-function.org \
+		--export-json ../json-data/rust_ansi_term-src_style-style_serialization==modify-function.json
+#+end_src
+***** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/rust_ansi_term-src_style-style_serialization.json \
+		  --labels warp,cargo \
+		  -o  plots/plot_whisker_rust_ansi_term-src_style-style_serialization.png
+#+end_src
+***** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/rust_ansi_term-src_style-style_serialization.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_rust_ansi_term-src_style-style_serialization.png
+#+end_src
+**** command_comment
+***** command
 #+begin_src sh
   hyperfine \
 	  --command-name warp \
@@ -80,14 +263,14 @@
 	  --export-orgmode ../org-data/rust_ansi_term-src_style-style_serialization.org \
 	  --export-json ../json-data/rust_ansi_term-src_style-style_serialization.json
 #+end_src
-**** plot whisker
+***** plot whisker
 #+begin_src sh
   python3 plot_whisker.py \
 		  json-data/rust_ansi_term-src_style-style_serialization.json \
 		  --labels warp,cargo \
 		  -o  plots/plot_whisker_rust_ansi_term-src_style-style_serialization.png
 #+end_src
-**** plot histogram
+***** plot histogram
 #+begin_src sh
   python3 plot_histogram.py \
 		  json-data/rust_ansi_term-src_style-style_serialization.json \
@@ -96,38 +279,69 @@
 #+end_src
 * Embedded HAL
 ** embedded-can/src/id.rs
-*** standard_id_new
-**** command
+*** standard_id_new_out_of_range
+**** command_new_function
+***** command
 #+begin_src sh
   hyperfine \
 	  --command-name warp \
-	  "echo '// test' >> src/id.rs && \		  
+	  "./new_function.sh src/id.rs && \
 	  warp test \
-	  src/id.rs standard_id_new \
+	  src/id.rs standard_id_new_out_of_range \
 	  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
 	  --command-name cargo \
-	  "echo '// test' >> src/id.rs && \
-	  cargo test standard_id_new" \
+	  "./new_function.sh src/id.rs && \
+	  cargo test standard_id_new_out_of_range" \
 	  --warmup 50 --runs 100 \
-	  --export-orgmode ../../org-data/embedded_hal-embedded_can_src_id-standard_id_new.org \
-	  --export-json ../../json-data/embedded_hal-embedded_can_src_id-standard_id_new.json
+	  --export-orgmode ../../org-data/embedded_hal-embedded_can_src_id-standard_id_new_out_of_range==new-function.org \
+	  --export-json ../../json-data/embedded_hal-embedded_can_src_id-standard_id_new_out_of_range==new-function.json
 #+end_src
-**** plot whisker
+***** plot whisker
 #+begin_src sh
   python3 plot_whisker.py \
-		  json-data/embedded_hal-embedded_can_src_id-standard_id_new.json \
+		  json-data/embedded_hal-embedded_can_src_id-standard_id_new_out_of_range.json \
 		  --labels warp,cargo \
-		  -o  plots/plot_whisker_embedded_hal-embedded_can_src_id-standard_id_new.png
+		  -o  plots/plot_whisker_embedded_hal-embedded_can_src_id-standard_id_new_out_of_range.png
 #+end_src
-**** plot histogram
+***** plot histogram
 #+begin_src sh
   python3 plot_histogram.py \
-		  json-data/embedded_hal-embedded_can_src_id-standard_id_new.json \
+		  json-data/embedded_hal-embedded_can_src_id-standard_id_new_out_of_range.json \
 		  --labels warp,cargo --bins 100 --type barstacked \
-		  -o plots/plot_hist_embedded_hal-embedded_can_src_id-standard_id_new.png
+		  -o plots/plot_hist_embedded_hal-embedded_can_src_id-standard_id_new_out_of_range.png
 #+end_src
-*** standard_id_new_out_of_range
-**** command
+**** command_modify_function
+***** command
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+	  "./modify_function.sh 159 src/id.rs && \
+	  warp test \
+	  src/id.rs standard_id_new_out_of_range \
+	  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "./modify_function.sh 159 src/id.rs && \
+	  cargo test standard_id_new_out_of_range" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../../org-data/embedded_hal-embedded_can_src_id-standard_id_new_out_of_range==modify-function.org \
+	  --export-json ../../json-data/embedded_hal-embedded_can_src_id-standard_id_new_out_of_range==modify-function.json
+#+end_src
+***** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/embedded_hal-embedded_can_src_id-standard_id_new_out_of_range.json \
+		  --labels warp,cargo \
+		  -o  plots/plot_whisker_embedded_hal-embedded_can_src_id-standard_id_new_out_of_range.png
+#+end_src
+***** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/embedded_hal-embedded_can_src_id-standard_id_new_out_of_range.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_embedded_hal-embedded_can_src_id-standard_id_new_out_of_range.png
+#+end_src
+**** command_comment
+***** command
 #+begin_src sh
   hyperfine \
 	  --command-name warp \
@@ -142,14 +356,14 @@
 	  --export-orgmode ../../org-data/embedded_hal-embedded_can_src_id-standard_id_new_out_of_range.org \
 	  --export-json ../../json-data/embedded_hal-embedded_can_src_id-standard_id_new_out_of_range.json
 #+end_src
-**** plot whisker
+***** plot whisker
 #+begin_src sh
   python3 plot_whisker.py \
 		  json-data/embedded_hal-embedded_can_src_id-standard_id_new_out_of_range.json \
 		  --labels warp,cargo \
 		  -o  plots/plot_whisker_embedded_hal-embedded_can_src_id-standard_id_new_out_of_range.png
 #+end_src
-**** plot histogram
+***** plot histogram
 #+begin_src sh
   python3 plot_histogram.py \
 		  json-data/embedded_hal-embedded_can_src_id-standard_id_new_out_of_range.json \
@@ -157,7 +371,68 @@
 		  -o plots/plot_hist_embedded_hal-embedded_can_src_id-standard_id_new_out_of_range.png
 #+end_src
 *** standard_id_new_unchecked_out_of_range
-**** command
+**** command_new_function
+***** command
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+	  "./new_function.sh src/id.rs && \
+	  warp test \
+	  src/id.rs standard_id_new_unchecked_out_of_range \
+	  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "./new_function.sh src/id.rs && \
+	  cargo test standard_id_new_unchecked_out_of_range" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../../org-data/embedded_hal-embedded_can_src_id-standard_id_new_unchecked_out_of_range==new-function.org \
+	  --export-json ../../json-data/embedded_hal-embedded_can_src_id-standard_id_new_unchecked_out_of_range==new-function.json
+#+end_src
+***** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/embedded_hal-embedded_can_src_id-standard_id_new_unchecked_out_of_range.json \
+		  --labels warp,cargo \
+		  -o  plots/plot_whisker_embedded_hal-embedded_can_src_id-standard_id_new_unchecked_out_of_range.png
+#+end_src
+***** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/embedded_hal-embedded_can_src_id-standard_id_new_unchecked_out_of_range.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_embedded_hal-embedded_can_src_id-standard_id_new_unchecked_out_of_range.png
+#+end_src
+**** command_modify_function
+***** command
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+	  "./modify_function.sh 159 src/id.rs && \
+	  warp test \
+	  src/id.rs standard_id_new_unchecked_out_of_range \
+	  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "./modify_function.sh 159 src/id.rs && \
+	  cargo test standard_id_new_unchecked_out_of_range" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../../org-data/embedded_hal-embedded_can_src_id-standard_id_new_unchecked_out_of_range==modify-function.org \
+	  --export-json ../../json-data/embedded_hal-embedded_can_src_id-standard_id_new_unchecked_out_of_range==modify-function.json
+#+end_src
+***** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/embedded_hal-embedded_can_src_id-standard_id_new_unchecked_out_of_range.json \
+		  --labels warp,cargo \
+		  -o  plots/plot_whisker_embedded_hal-embedded_can_src_id-standard_id_new_unchecked_out_of_range.png
+#+end_src
+***** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/embedded_hal-embedded_can_src_id-standard_id_new_unchecked_out_of_range.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_embedded_hal-embedded_can_src_id-standard_id_new_unchecked_out_of_range.png
+#+end_src
+**** command_comment
+***** command
 #+begin_src sh
   hyperfine \
 	  --command-name warp \
@@ -172,52 +447,83 @@
 	  --export-orgmode ../../org-data/embedded_hal-embedded_can_src_id-standard_id_new_unchecked_out_of_range.org \
 	  --export-json ../../json-data/embedded_hal-embedded_can_src_id-standard_id_new_unchecked_out_of_range.json
 #+end_src
-**** plot whisker
+***** plot whisker
 #+begin_src sh
   python3 plot_whisker.py \
 		  json-data/embedded_hal-embedded_can_src_id-standard_id_new_unchecked_out_of_range.json \
 		  --labels warp,cargo \
 		  -o  plots/plot_whisker_embedded_hal-embedded_can_src_id-standard_id_new_unchecked_out_of_range.png
 #+end_src
-**** plot histogram
+***** plot histogram
 #+begin_src sh
   python3 plot_histogram.py \
 		  json-data/embedded_hal-embedded_can_src_id-standard_id_new_unchecked_out_of_range.json \
 		  --labels warp,cargo --bins 100 --type barstacked \
 		  -o plots/plot_hist_embedded_hal-embedded_can_src_id-standard_id_new_unchecked_out_of_range.png
 #+end_src
-*** extended_id_new
-**** command
+*** extended_id_new_out_of_range
+**** command_new_function
+***** command
 #+begin_src sh
   hyperfine \
 	  --command-name warp \
-	  "echo '// test' >> src/id.rs && \
+	  "./new_function.sh src/id.rs && \
 	  warp test \
-	  src/id.rs extended_id_new \
+	  src/id.rs extended_id_new_out_of_range \
 	  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
 	  --command-name cargo \
-	  "echo '// test' >> src/id.rs && \
-	  cargo test extended_id_new" \
+	  "./new_function.sh src/id.rs && \
+	  cargo test extended_id_new_out_of_range" \
 	  --warmup 50 --runs 100 \
-	  --export-orgmode ../../org-data/embedded_hal-embedded_can_src_id-extended_id_new.org \
-	  --export-json ../../json-data/embedded_hal-embedded_can_src_id-extended_id_new.json
+	  --export-orgmode ../../org-data/embedded_hal-embedded_can_src_id-extended_id_new_out_of_range==new-function.org \
+	  --export-json ../../json-data/embedded_hal-embedded_can_src_id-extended_id_new_out_of_range==new-function.json
 #+end_src
-**** plot whisker
+***** plot whisker
 #+begin_src sh
   python3 plot_whisker.py \
-		  json-data/embedded_hal-embedded_can_src_id-extended_id_new.json \
+		  json-data/embedded_hal-embedded_can_src_id-extended_id_new_out_of_range.json \
 		  --labels warp,cargo \
-		  -o  plots/plot_whisker_embedded_hal-embedded_can_src_id-extended_id_new.png
+		  -o  plots/plot_whisker_embedded_hal-embedded_can_src_id-extended_id_new_out_of_range.png
 #+end_src
-**** plot histogram
+***** plot histogram
 #+begin_src sh
   python3 plot_histogram.py \
-		  json-data/embedded_hal-embedded_can_src_id-extended_id_new.json \
+		  json-data/embedded_hal-embedded_can_src_id-extended_id_new_out_of_range.json \
 		  --labels warp,cargo --bins 100 --type barstacked \
-		  -o plots/plot_hist_embedded_hal-embedded_can_src_id-extended_id_new.png
+		  -o plots/plot_hist_embedded_hal-embedded_can_src_id-extended_id_new_out_of_range.png
 #+end_src
-*** extended_id_new_out_of_range
-**** command
+**** command_modify_function
+***** command
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+	  "./modify_function.sh 159 src/id.rs && \
+	  warp test \
+	  src/id.rs extended_id_new_out_of_range \
+	  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "./modify_function.sh 159 src/id.rs && \
+	  cargo test extended_id_new_out_of_range" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../../org-data/embedded_hal-embedded_can_src_id-extended_id_new_out_of_range==modify-function.org \
+	  --export-json ../../json-data/embedded_hal-embedded_can_src_id-extended_id_new_out_of_range==modify-function.json
+#+end_src
+***** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/embedded_hal-embedded_can_src_id-extended_id_new_out_of_range.json \
+		  --labels warp,cargo \
+		  -o  plots/plot_whisker_embedded_hal-embedded_can_src_id-extended_id_new_out_of_range.png
+#+end_src
+***** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/embedded_hal-embedded_can_src_id-extended_id_new_out_of_range.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_embedded_hal-embedded_can_src_id-extended_id_new_out_of_range.png
+#+end_src
+**** command_comment
+***** command
 #+begin_src sh
   hyperfine \
 	  --command-name warp \
@@ -232,14 +538,14 @@
 	  --export-orgmode ../../org-data/embedded_hal-embedded_can_src_id-extended_id_new_out_of_range.org \
 	  --export-json ../../json-data/embedded_hal-embedded_can_src_id-extended_id_new_out_of_range.json
 #+end_src
-**** plot whisker
+***** plot whisker
 #+begin_src sh
   python3 plot_whisker.py \
 		  json-data/embedded_hal-embedded_can_src_id-extended_id_new_out_of_range.json \
 		  --labels warp,cargo \
 		  -o  plots/plot_whisker_embedded_hal-embedded_can_src_id-extended_id_new_out_of_range.png
 #+end_src
-**** plot histogram
+***** plot histogram
 #+begin_src sh
   python3 plot_histogram.py \
 		  json-data/embedded_hal-embedded_can_src_id-extended_id_new_out_of_range.json \
@@ -247,7 +553,68 @@
 		  -o plots/plot_hist_embedded_hal-embedded_can_src_id-extended_id_new_out_of_range.png
 #+end_src
 *** extended_id_new_unchecked_out_of_range
-**** command
+**** command_new_function
+***** command
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+	  "./new_function.sh src/id.rs && \
+	  warp test \
+	  src/id.rs extended_id_new_unchecked_out_of_range \
+	  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "./new_function.sh src/id.rs && \
+	  cargo test extended_id_new_unchecked_out_of_range" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../../org-data/embedded_hal-embedded_can_src_id-extended_id_new_unchecked_out_of_range==new-function.org \
+	  --export-json ../../json-data/embedded_hal-embedded_can_src_id-extended_id_new_unchecked_out_of_range==new-function.json
+#+end_src
+***** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/embedded_hal-embedded_can_src_id-extended_id_new_unchecked_out_of_range.json \
+		  --labels warp,cargo \
+		  -o  plots/plot_whisker_embedded_hal-embedded_can_src_id-extended_id_new_unchecked_out_of_range.png
+#+end_src
+***** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/embedded_hal-embedded_can_src_id-extended_id_new_unchecked_out_of_range.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_embedded_hal-embedded_can_src_id-extended_id_new_unchecked_out_of_range.png
+#+end_src
+**** command_modify_function
+***** command
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+	  "./modify_function.sh 159 src/id.rs && \
+	  warp test \
+	  src/id.rs extended_id_new_unchecked_out_of_range \
+	  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "./modify_function.sh 159 src/id.rs && \
+	  cargo test extended_id_new_unchecked_out_of_range" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../../org-data/embedded_hal-embedded_can_src_id-extended_id_new_unchecked_out_of_range==modify-function.org \
+	  --export-json ../../json-data/embedded_hal-embedded_can_src_id-extended_id_new_unchecked_out_of_range==modify-function.json
+#+end_src
+***** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/embedded_hal-embedded_can_src_id-extended_id_new_unchecked_out_of_range.json \
+		  --labels warp,cargo \
+		  -o  plots/plot_whisker_embedded_hal-embedded_can_src_id-extended_id_new_unchecked_out_of_range.png
+#+end_src
+***** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/embedded_hal-embedded_can_src_id-extended_id_new_unchecked_out_of_range.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_embedded_hal-embedded_can_src_id-extended_id_new_unchecked_out_of_range.png
+#+end_src
+**** command_comment
+***** command
 #+begin_src sh
   hyperfine \
 	  --command-name warp \
@@ -262,14 +629,14 @@
 	  --export-orgmode ../../org-data/embedded_hal-embedded_can_src_id-extended_id_new_unchecked_out_of_range.org \
 	  --export-json ../../json-data/embedded_hal-embedded_can_src_id-extended_id_new_unchecked_out_of_range.json
 #+end_src
-**** plot whisker
+***** plot whisker
 #+begin_src sh
   python3 plot_whisker.py \
 		  json-data/embedded_hal-embedded_can_src_id-extended_id_new_unchecked_out_of_range.json \
 		  --labels warp,cargo \
 		  -o  plots/plot_whisker_embedded_hal-embedded_can_src_id-extended_id_new_unchecked_out_of_range.png
 #+end_src
-**** plot histogram
+***** plot histogram
 #+begin_src sh
   python3 plot_histogram.py \
 		  json-data/embedded_hal-embedded_can_src_id-extended_id_new_unchecked_out_of_range.json \
@@ -277,7 +644,68 @@
 		  -o plots/plot_hist_embedded_hal-embedded_can_src_id-extended_id_new_unchecked_out_of_range.png
 #+end_src
 *** get_standard_id_from_extended_id
-**** command
+**** command_new_function
+***** command
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+	  "./new_function.sh src/id.rs && \
+	  warp test \
+	  src/id.rs get_standard_id_from_extended_id \
+	  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "./new_function.sh src/id.rs && \
+	  cargo test get_standard_id_from_extended_id" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../../org-data/embedded_hal-embedded_can_src_id-get_standard_id_from_extended_id==new-function.org \
+	  --export-json ../../json-data/embedded_hal-embedded_can_src_id-get_standard_id_from_extended_id==new-function.json
+#+end_src
+***** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/embedded_hal-embedded_can_src_id-get_standard_id_from_extended_id.json \
+		  --labels warp,cargo \
+		  -o  plots/plot_whisker_embedded_hal-embedded_can_src_id-get_standard_id_from_extended_id.png
+#+end_src
+***** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/embedded_hal-embedded_can_src_id-get_standard_id_from_extended_id.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_embedded_hal-embedded_can_src_id-get_standard_id_from_extended_id.png
+#+end_src
+**** command_modify_function
+***** command
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+	  "./modify_function.sh 159 src/id.rs && \
+	  warp test \
+	  src/id.rs get_standard_id_from_extended_id \
+	  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "./modify_function.sh 159 src/id.rs && \
+	  cargo test get_standard_id_from_extended_id" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../../org-data/embedded_hal-embedded_can_src_id-get_standard_id_from_extended_id==modify-function.org \
+	  --export-json ../../json-data/embedded_hal-embedded_can_src_id-get_standard_id_from_extended_id==modify-function.json
+#+end_src
+***** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/embedded_hal-embedded_can_src_id-get_standard_id_from_extended_id.json \
+		  --labels warp,cargo \
+		  -o  plots/plot_whisker_embedded_hal-embedded_can_src_id-get_standard_id_from_extended_id.png
+#+end_src
+***** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/embedded_hal-embedded_can_src_id-get_standard_id_from_extended_id.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_embedded_hal-embedded_can_src_id-get_standard_id_from_extended_id.png
+#+end_src
+**** command_comment
+***** command
 #+begin_src sh
   hyperfine \
 	  --command-name warp \
@@ -292,14 +720,14 @@
 	  --export-orgmode ../../org-data/embedded_hal-embedded_can_src_id-get_standard_id_from_extended_id.org \
 	  --export-json ../../json-data/embedded_hal-embedded_can_src_id-get_standard_id_from_extended_id.json
 #+end_src
-**** plot whisker
+***** plot whisker
 #+begin_src sh
   python3 plot_whisker.py \
 		  json-data/embedded_hal-embedded_can_src_id-get_standard_id_from_extended_id.json \
 		  --labels warp,cargo \
 		  -o  plots/plot_whisker_embedded_hal-embedded_can_src_id-get_standard_id_from_extended_id.png
 #+end_src
-**** plot histogram
+***** plot histogram
 #+begin_src sh
   python3 plot_histogram.py \
 		  json-data/embedded_hal-embedded_can_src_id-get_standard_id_from_extended_id.json \
@@ -307,7 +735,68 @@
 		  -o plots/plot_hist_embedded_hal-embedded_can_src_id-get_standard_id_from_extended_id.png
 #+end_src
 *** cmp_id
-**** command
+**** command_new_function
+***** command
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+	  "./new_function.sh src/id.rs && \
+	  warp test \
+	  src/id.rs cmp_id \
+	  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "./new_function.sh src/id.rs && \
+	  cargo test cmp_id" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../../org-data/embedded_hal-embedded_can_src_id-cmp_id==new-function.org \
+	  --export-json ../../json-data/embedded_hal-embedded_can_src_id-cmp_id==new-function.json
+#+end_src
+***** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/embedded_hal-embedded_can_src_id-cmp_id.json \
+		  --labels warp,cargo \
+		  -o  plots/plot_whisker_embedded_hal-embedded_can_src_id-cmp_id.png
+#+end_src
+***** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/embedded_hal-embedded_can_src_id-cmp_id.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_embedded_hal-embedded_can_src_id-cmp_id.png
+#+end_src
+**** command_modify_function
+***** command
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+	  "./modify_function.sh 159 src/id.rs && \
+	  warp test \
+	  src/id.rs cmp_id \
+	  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "./modify_function.sh 159 src/id.rs && \
+	  cargo test cmp_id" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../../org-data/embedded_hal-embedded_can_src_id-cmp_id==modify-function.org \
+	  --export-json ../../json-data/embedded_hal-embedded_can_src_id-cmp_id==modify-function.json
+#+end_src
+***** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/embedded_hal-embedded_can_src_id-cmp_id.json \
+		  --labels warp,cargo \
+		  -o  plots/plot_whisker_embedded_hal-embedded_can_src_id-cmp_id.png
+#+end_src
+***** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/embedded_hal-embedded_can_src_id-cmp_id.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_embedded_hal-embedded_can_src_id-cmp_id.png
+#+end_src
+**** command_comment
+***** command
 #+begin_src sh
   hyperfine \
 	  --command-name warp \
@@ -322,14 +811,14 @@
 	  --export-orgmode ../../org-data/embedded_hal-embedded_can_src_id-cmp_id.org \
 	  --export-json ../../json-data/embedded_hal-embedded_can_src_id-cmp_id.json
 #+end_src
-**** plot whisker
+***** plot whisker
 #+begin_src sh
   python3 plot_whisker.py \
 		  json-data/embedded_hal-embedded_can_src_id-cmp_id.json \
 		  --labels warp,cargo \
 		  -o  plots/plot_whisker_embedded_hal-embedded_can_src_id-cmp_id.png
 #+end_src
-**** plot histogram
+***** plot histogram
 #+begin_src sh
   python3 plot_histogram.py \
 		  json-data/embedded_hal-embedded_can_src_id-cmp_id.json \
@@ -339,7 +828,69 @@
 * Cargo
 ** src/cargo/util/io.rs
 *** under_the_limit
-**** command
+**** command_new_function
+***** command
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+	  "./new_function.sh src/cargo/util/io.rs && \
+	  warp test \
+	  src/cargo/util/io.rs under_the_limit \
+	  --public-store-metadata-path 		 /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "./new_function.sh src/cargo/util/io.rs && \
+  cargo test under_the_limit" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../org-data/cargo-src_cargo_util_io_rs-under_the_limit==new-function.org \
+	  --export-json ../json-data/cargo-src_cargo_util_io_rs-under_the_limit==new-function.json
+#+end_src
+***** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/cargo-src_cargo_util_io_rs-under_the_limit.json \
+		  --labels warp,cargo \
+		  -o plots/plot_whisker_cargo-src_cargo_util_io_rs-under_the_limit.png
+#+end_src
+***** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/cargo-src_cargo_util_io_rs-under_the_limit.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_cargo-src_cargo_util_io_rs-under_the_limit.png
+#+end_src
+
+**** command_modify_function
+***** command
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+	  "./modify_function.sh 50 src/cargo/util/io.rs && \
+	  warp test \
+	  src/cargo/util/io.rs under_the_limit \
+	  --public-store-metadata-path 		 /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "./modify_function.sh 50 src/cargo/util/io.rs && \
+  cargo test under_the_limit" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../org-data/cargo-src_cargo_util_io_rs-under_the_limit==modify-function.org \
+	  --export-json ../json-data/cargo-src_cargo_util_io_rs-under_the_limit==modify-function.json
+#+end_src
+***** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/cargo-src_cargo_util_io_rs-under_the_limit.json \
+		  --labels warp,cargo \
+		  -o plots/plot_whisker_cargo-src_cargo_util_io_rs-under_the_limit.png
+#+end_src
+***** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/cargo-src_cargo_util_io_rs-under_the_limit.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_cargo-src_cargo_util_io_rs-under_the_limit.png
+#+end_src
+**** command_comment
+***** command
 #+begin_src sh
   hyperfine \
 	  --command-name warp \
@@ -354,14 +905,14 @@
 	  --export-orgmode ../org-data/cargo-src_cargo_util_io_rs-under_the_limit.org \
 	  --export-json ../json-data/cargo-src_cargo_util_io_rs-under_the_limit.json
 #+end_src
-**** plot whisker
+***** plot whisker
 #+begin_src sh
   python3 plot_whisker.py \
 		  json-data/cargo-src_cargo_util_io_rs-under_the_limit.json \
 		  --labels warp,cargo \
 		  -o plots/plot_whisker_cargo-src_cargo_util_io_rs-under_the_limit.png
 #+end_src
-**** plot histogram
+***** plot histogram
 #+begin_src sh
   python3 plot_histogram.py \
 		  json-data/cargo-src_cargo_util_io_rs-under_the_limit.json \
@@ -369,7 +920,68 @@
 		  -o plots/plot_hist_cargo-src_cargo_util_io_rs-under_the_limit.png
 #+end_src
 *** over_the_limit
-**** command
+**** command_new_function
+***** command
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+		  "./new_function.sh src/cargo/util/io.rs && \
+		  warp test \
+		  src/cargo/util/io.rs over_the_limit \
+		  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+		  --command-name cargo \
+		  "./new_function.sh src/cargo/util/io.rs && \
+		  cargo test over_the_limit" \
+		  --warmup 50 --runs 100 \
+		  --export-orgmode ../org-data/cargo-src_cargo_util_io_rs-over_the_limit==new-function.org \
+		  --export-json ../json-data/cargo-src_cargo_util_io_rs-over_the_limit==new-function.json
+#+end_src
+***** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/cargo-src_cargo_util_io_rs-over_the_limit.json \
+		  --labels warp,cargo \
+		  -o plots/plot_whisker_cargo-src_cargo_util_io_rs-over_the_limit.png
+#+end_src
+***** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/cargo-src_cargo_util_io_rs-over_the_limit.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_cargo-src_cargo_util_io_rs-over_the_limit.png
+#+end_src
+**** command_modify_function
+***** command
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+		  "./modify_function.sh 41 src/cargo/util/io.rs && \
+		  warp test \
+		  src/cargo/util/io.rs over_the_limit \
+		  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+		  --command-name cargo \
+		  "./modify_function.sh 41 src/cargo/util/io.rs && \
+		  cargo test over_the_limit" \
+		  --warmup 50 --runs 100 \
+		  --export-orgmode ../org-data/cargo-src_cargo_util_io_rs-over_the_limit==modify-function.org \
+		  --export-json ../json-data/cargo-src_cargo_util_io_rs-over_the_limit==modify-function.json
+#+end_src
+***** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/cargo-src_cargo_util_io_rs-over_the_limit.json \
+		  --labels warp,cargo \
+		  -o plots/plot_whisker_cargo-src_cargo_util_io_rs-over_the_limit.png
+#+end_src
+***** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/cargo-src_cargo_util_io_rs-over_the_limit.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_cargo-src_cargo_util_io_rs-over_the_limit.png
+#+end_src
+**** command_comment
+***** command
 #+begin_src sh
   hyperfine \
 	  --command-name warp \
@@ -384,14 +996,14 @@
 	  --export-orgmode ../org-data/cargo-src_cargo_util_io_rs-over_the_limit.org \
 	  --export-json ../json-data/cargo-src_cargo_util_io_rs-over_the_limit.json
 #+end_src
-**** plot whisker
+***** plot whisker
 #+begin_src sh
   python3 plot_whisker.py \
 		  json-data/cargo-src_cargo_util_io_rs-over_the_limit.json \
 		  --labels warp,cargo \
 		  -o plots/plot_whisker_cargo-src_cargo_util_io_rs-over_the_limit.png
 #+end_src
-**** plot histogram
+***** plot histogram
 #+begin_src sh
   python3 plot_histogram.py \
 		  json-data/cargo-src_cargo_util_io_rs-over_the_limit.json \
@@ -401,7 +1013,68 @@
 * Rust Cmd Lib
 ** src/thread_local.rs
 *** test_proc_var_u32
-**** command
+**** command_new_function
+***** command
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+	  "./new_function.sh src/thread_local.rs && \
+	  warp test \
+	  src/thread_local.rs test_proc_var_u32 \
+	  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "./new_function.sh src/thread_local.rs && \
+	  cargo test test_proc_var_u32" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../org-data/rust_cmd_lib-src_thread_local_rs-test_proc_var_u32==new-function.org \
+	  --export-json ../json-data/rust_cmd_lib-src_thread_local_rs-test_proc_var_u32=new-function.json
+#+end_src
+***** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/rust_cmd_lib-src_thread_local_rs-test_proc_var_u32.json \
+		  --labels warp,cargo \
+		  -o plots/plot_whisker_rust_cmd_lib-src_thread_local_rs-test_proc_var_u32.png
+#+end_src
+***** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/rust_cmd_lib-src_thread_local_rs-test_proc_var_u32.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_rust_cmd_lib-src_thread_local_rs-test_proc_var_u32.png
+#+end_src
+**** command_modify_function
+***** command
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+	  "./modify_function.sh 76 src/thread_local.rs && \
+	  warp test \
+	  src/thread_local.rs test_proc_var_u32 \
+	  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "./modify_function.sh 76 src/thread_local.rs && \
+	  cargo test test_proc_var_u32" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../org-data/rust_cmd_lib-src_thread_local_rs-test_proc_var_u32==modify-function.org \
+	  --export-json ../json-data/rust_cmd_lib-src_thread_local_rs-test_proc_var_u32=modify-function.json
+#+end_src
+***** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/rust_cmd_lib-src_thread_local_rs-test_proc_var_u32.json \
+		  --labels warp,cargo \
+		  -o plots/plot_whisker_rust_cmd_lib-src_thread_local_rs-test_proc_var_u32.png
+#+end_src
+***** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/rust_cmd_lib-src_thread_local_rs-test_proc_var_u32.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_rust_cmd_lib-src_thread_local_rs-test_proc_var_u32.png
+#+end_src
+**** command_comment
+***** command
 #+begin_src sh
   hyperfine \
 	  --command-name warp \
@@ -416,14 +1089,14 @@
 	  --export-orgmode ../org-data/rust_cmd_lib-src_thread_local_rs-test_proc_var_u32.org \
 	  --export-json ../json-data/rust_cmd_lib-src_thread_local_rs-test_proc_var_u32.json
 #+end_src
-**** plot whisker
+***** plot whisker
 #+begin_src sh
   python3 plot_whisker.py \
 		  json-data/rust_cmd_lib-src_thread_local_rs-test_proc_var_u32.json \
 		  --labels warp,cargo \
 		  -o plots/plot_whisker_rust_cmd_lib-src_thread_local_rs-test_proc_var_u32.png
 #+end_src
-**** plot histogram
+***** plot histogram
 #+begin_src sh
   python3 plot_histogram.py \
 		  json-data/rust_cmd_lib-src_thread_local_rs-test_proc_var_u32.json \
@@ -431,7 +1104,68 @@
 		  -o plots/plot_hist_rust_cmd_lib-src_thread_local_rs-test_proc_var_u32.png
 #+end_src
 *** test_proc_var_map
-**** command
+**** command_modify_function
+***** command
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+	  "./new_function.sh src/thread_local.rs && \
+	  warp test \
+	  src/thread_local.rs test_proc_var_map \
+	  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "./new_function.sh src/thread_local.rs && \
+	  cargo test test_proc_var_map" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../org-data/rust_cmd_lib-src_thread_local_rs-test_proc_var_map==new-function.org \
+	  --export-json ../json-data/rust_cmd_lib-src_thread_local_rs-test_proc_var_map==new-function.json
+#+end_src
+***** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/rust_cmd_lib-src_thread_local_rs-test_proc_var_map.json \
+		  --labels warp,cargo \
+		  -o plots/plot_whisker_rust_cmd_lib-src_thread_local_rs-test_proc_var_map.png
+#+end_src
+***** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/rust_cmd_lib-src_thread_local_rs-test_proc_var_map.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_rust_cmd_lib-src_thread_local_rs-test_proc_var_map.png
+#+end_src
+**** command_modify_function
+***** command
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+	  "./modify_function.sh 68 src/thread_local.rs && \
+	  warp test \
+	  src/thread_local.rs test_proc_var_map \
+	  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "./modify_function.sh 68 src/thread_local.rs && \
+	  cargo test test_proc_var_map" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../org-data/rust_cmd_lib-src_thread_local_rs-test_proc_var_map==modify-function.org \
+	  --export-json ../json-data/rust_cmd_lib-src_thread_local_rs-test_proc_var_map==modify-function.json
+#+end_src
+***** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/rust_cmd_lib-src_thread_local_rs-test_proc_var_map.json \
+		  --labels warp,cargo \
+		  -o plots/plot_whisker_rust_cmd_lib-src_thread_local_rs-test_proc_var_map.png
+#+end_src
+***** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/rust_cmd_lib-src_thread_local_rs-test_proc_var_map.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_rust_cmd_lib-src_thread_local_rs-test_proc_var_map.png
+#+end_src
+**** command_comment
+***** command
 #+begin_src sh
   hyperfine \
 	  --command-name warp \
@@ -446,14 +1180,14 @@
 	  --export-orgmode ../org-data/rust_cmd_lib-src_thread_local_rs-test_proc_var_map.org \
 	  --export-json ../json-data/rust_cmd_lib-src_thread_local_rs-test_proc_var_map.json
 #+end_src
-**** plot whisker
+***** plot whisker
 #+begin_src sh
   python3 plot_whisker.py \
 		  json-data/rust_cmd_lib-src_thread_local_rs-test_proc_var_map.json \
 		  --labels warp,cargo \
 		  -o plots/plot_whisker_rust_cmd_lib-src_thread_local_rs-test_proc_var_map.png
 #+end_src
-**** plot histogram
+***** plot histogram
 #+begin_src sh
   python3 plot_histogram.py \
 		  json-data/rust_cmd_lib-src_thread_local_rs-test_proc_var_map.json \
@@ -461,7 +1195,70 @@
 		  -o plots/plot_hist_rust_cmd_lib-src_thread_local_rs-test_proc_var_map.png
 #+end_src
 *** test_proc_var_vec
-**** command
+**** command_new_function
+***** command
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+	  "./new_function.sh src/thread_local.rs && \
+	  warp test \
+	  src/thread_local.rs test_proc_var_vec \
+	  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "./new_function.sh src/thread_local.rs && \
+	  cargo test test_proc_var_vec" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../org-data/rust_cmd_lib-src_thread_local_rs-test_proc_var_vec==new-function.org \
+	  --export-json ../json-data/rust_cmd_lib-src_thread_local_rs-test_proc_var_vec==new-function.json
+#+end_src
+***** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/rust_cmd_lib-src_thread_local_rs-test_proc_var_vec.json \
+		  --labels warp,cargo \
+		  -o plots/plot_whisker_rust_cmd_lib-src_thread_local_rs-test_proc_var_vec.png
+#+end_src
+***** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/rust_cmd_lib-src_thread_local_rs-test_proc_var_vec.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_rust_cmd_lib-src_thread_local_rs-test_proc_var_vec.png
+#+end_src
+
+**** command_modify_function
+***** command
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+	  "./modify_function.sh 68 src/thread_local.rs && \
+	  warp test \
+	  src/thread_local.rs test_proc_var_vec \
+	  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "./modify_function.sh 68 src/thread_local.rs && \
+	  cargo test test_proc_var_vec" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../org-data/rust_cmd_lib-src_thread_local_rs-test_proc_var_vec==modify-function.org \
+	  --export-json ../json-data/rust_cmd_lib-src_thread_local_rs-test_proc_var_vec==modify-function.json
+#+end_src
+***** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/rust_cmd_lib-src_thread_local_rs-test_proc_var_vec.json \
+		  --labels warp,cargo \
+		  -o plots/plot_whisker_rust_cmd_lib-src_thread_local_rs-test_proc_var_vec.png
+#+end_src
+***** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/rust_cmd_lib-src_thread_local_rs-test_proc_var_vec.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_rust_cmd_lib-src_thread_local_rs-test_proc_var_vec.png
+#+end_src
+
+**** command_comment
+***** command
 #+begin_src sh
   hyperfine \
 	  --command-name warp \
@@ -476,14 +1273,14 @@
 	  --export-orgmode ../org-data/rust_cmd_lib-src_thread_local_rs-test_proc_var_vec.org \
 	  --export-json ../json-data/rust_cmd_lib-src_thread_local_rs-test_proc_var_vec.json
 #+end_src
-**** plot whisker
+***** plot whisker
 #+begin_src sh
   python3 plot_whisker.py \
 		  json-data/rust_cmd_lib-src_thread_local_rs-test_proc_var_vec.json \
 		  --labels warp,cargo \
 		  -o plots/plot_whisker_rust_cmd_lib-src_thread_local_rs-test_proc_var_vec.png
 #+end_src
-**** plot histogram
+***** plot histogram
 #+begin_src sh
   python3 plot_histogram.py \
 		  json-data/rust_cmd_lib-src_thread_local_rs-test_proc_var_vec.json \
@@ -493,7 +1290,68 @@
 * p003
 ** src/lib.rs
 *** add_two_and_two
-**** command
+**** command_modify_function
+***** command
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+	  "./modify_function.sh 19 src/lib.rs && \
+	  warp test \
+	  src/ lib.rs add_two_and_two \
+	  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "./modify_function.sh 19 src/lib.rs && \
+	  cargo test add_two_and_two" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../org-data/p003-src_lib_rs-add_two_and_two==modify-function.org \
+	  --export-json ../json-data/p003-src_lib_rs-add_two_and_two==modify-function.json
+#+end_src
+***** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/p003-src_lib_rs-add_two_and_two==function.json \
+		  --labels warp,cargo \
+		  -o plots/plot_whisker_p003-src_lib_rs-add_two_and_two==function.png
+#+end_src
+***** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/p003-src_lib_rs-add_two_and_two==function.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_p003-src_lib_rs-add_two_and_two==function.png
+#+end_src
+**** command_new_function
+***** command
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+	  "./new_function.sh src/lib.rs  && \
+	  warp test \
+	  src/ lib.rs add_two_and_two \
+	  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "./new_function.sh src/lib.rs  && \
+	  cargo test add_two_and_two" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../org-data/p003-src_lib_rs-add_two_and_two==new-function.org \
+	  --export-json ../json-data/p003-src_lib_rs-add_two_and_two==new-function.json
+#+end_src
+***** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/p003-src_lib_rs-add_two_and_two==function.json \
+		  --labels warp,cargo \
+		  -o plots/plot_whisker_p003-src_lib_rs-add_two_and_two==function.png
+#+end_src
+***** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/p003-src_lib_rs-add_two_and_two==function.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_p003-src_lib_rs-add_two_and_two==function.png
+#+end_src
+**** command_comment
+***** command
 #+begin_src sh
   hyperfine \
 	  --command-name warp \
@@ -503,19 +1361,19 @@
   --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
 	  --command-name cargo \
 	  "echo '// test' >> src/lib.rs && \
-  cargo test add_two_and_three" \
+  cargo test add_two_and_two" \
 	  --warmup 50 --runs 100 \
 	  --export-orgmode ../org-data/p003-src_lib_rs-add_two_and_two.org \
 	  --export-json ../json-data/p003-src_lib_rs-add_two_and_two.json
 #+end_src
-**** plot whisker
+***** plot whisker
 #+begin_src sh
   python3 plot_whisker.py \
 		  json-data/p003-src_lib_rs-add_two_and_two.json \
 		  --labels warp,cargo \
 		  -o plots/plot_whisker_p003-src_lib_rs-add_two_and_two.png
 #+end_src
-**** plot histogram
+***** plot histogram
 #+begin_src sh
   python3 plot_histogram.py \
 		  json-data/p003-src_lib_rs-add_two_and_two.json \
@@ -523,7 +1381,68 @@
 		  -o plots/plot_hist_p003-src_lib_rs-add_two_and_two.png
 #+end_src
 *** add_three_and_two
-**** command
+**** command_new_function
+***** command
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+	  "./new_function.sh src/lib.rs && \
+	  warp test \
+	  src/ lib.rs add_three_and_two \
+	  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "./new_function.sh src/lib.rs && \
+	  cargo test add_three_and_two" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../org-data/p003-src_lib_rs-add_three_and_two==new-function.org \
+	  --export-json ../json-data/p003-src_lib_rs-add_three_and_two==new-function.json
+#+end_src
+***** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/p003-src_lib_rs-add_two_and_two==function.json \
+		  --labels warp,cargo \
+		  -o plots/plot_whisker_p003-src_lib_rs-add_two_and_two==function.png
+#+end_src
+***** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/p003-src_lib_rs-add_two_and_two==function.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_p003-src_lib_rs-add_two_and_two==function.png
+#+end_src
+**** command_modify_function
+***** command
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+	  "./modify_function.sh 14 src/lib.rs && \
+	  warp test \
+	  src/ lib.rs add_three_and_two \
+	  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "./modify_function.sh 14 src/lib.rs && \
+	  cargo test add_three_and_two" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../org-data/p003-src_lib_rs-add_three_and_two==modify-function.org \
+	  --export-json ../json-data/p003-src_lib_rs-add_three_and_two==modify-function.json
+#+end_src
+***** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/p003-src_lib_rs-add_two_and_two==function.json \
+		  --labels warp,cargo \
+		  -o plots/plot_whisker_p003-src_lib_rs-add_two_and_two==function.png
+#+end_src
+***** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/p003-src_lib_rs-add_two_and_two==function.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_p003-src_lib_rs-add_two_and_two==function.png
+#+end_src
+**** command_comment
+***** command
 #+begin_src sh
   hyperfine \
 	  --command-name warp \
@@ -538,14 +1457,14 @@
 	  --export-orgmode ../org-data/p003-src_lib_rs-add_three_and_two.org \
 	  --export-json ../json-data/p003-src_lib_rs-add_three_and_two.json
 #+end_src
-**** plot whisker
+***** plot whisker
 #+begin_src sh
   python3 plot_whisker.py \
 		  json-data/p003-src_lib_rs-add_three_and_two.json \
 		  --labels warp,cargo \
 		  -o plots/plot_whisker_p003-src_lib_rs-add_three_and_two.png
 #+end_src
-**** plot histogram
+***** plot histogram
 #+begin_src sh
   python3 plot_histogram.py \
 		  json-data/p003-src_lib_rs-add_three_and_two.json \
@@ -553,7 +1472,69 @@
 		  -o plots/plot_hist_p003-src_lib_rs-add_three_and_two.png
 #+end_src
 *** one_hundred
-**** command
+**** command_new_function
+***** command
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+	  "./new_function.sh src/lib.rs && \
+	  warp test \
+	  src/ lib.rs one_hundred \
+	  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "./new_function.sh src/lib.rs && \
+	  cargo test one_hundred" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../org-data/p003-src_lib_rs-one_hundred==new-function.org \
+	  --export-json ../json-data/p003-src_lib_rs-one_hundred==new-function.json
+#+end_src
+***** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/p003-src_lib_rs-add_two_and_two==function.json \
+		  --labels warp,cargo \
+		  -o plots/plot_whisker_p003-src_lib_rs-add_two_and_two==function.png
+#+end_src
+***** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/p003-src_lib_rs-add_two_and_two==function.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_p003-src_lib_rs-add_two_and_two==function.png
+#+end_src
+
+**** command_modify_function
+***** command
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+	  "./modify_function.sh 14 src/lib.rs && \
+	  warp test \
+	  src/ lib.rs one_hundred \
+	  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "./modify_function.sh 14 src/lib.rs && \
+	  cargo test one_hundred" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../org-data/p003-src_lib_rs-one_hundred==modify-function.org \
+	  --export-json ../json-data/p003-src_lib_rs-one_hundred==modify-function.json
+#+end_src
+***** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/p003-src_lib_rs-add_two_and_two==function.json \
+		  --labels warp,cargo \
+		  -o plots/plot_whisker_p003-src_lib_rs-add_two_and_two==function.png
+#+end_src
+***** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/p003-src_lib_rs-add_two_and_two==function.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_p003-src_lib_rs-add_two_and_two==function.png
+#+end_src
+**** command_comment
+***** command
 #+begin_src sh
   hyperfine \
 	  --command-name warp \
@@ -568,14 +1549,14 @@
 	  --export-orgmode ../org-data/p003-src_lib_rs-one_hundred.org \
 	  --export-json ../json-data/p003-src_lib_rs-one_hundred.json
 #+end_src
-**** plot whisker
+***** plot whisker
 #+begin_src sh
   python3 plot_whisker.py \
 		  json-data/p003-src_lib_rs-one_hundred.json \
 		  --labels warp,cargo \
 		  -o plots/plot_whisker_p003-src_lib_rs-one_hundred.png
 #+end_src
-**** plot histogram
+***** plot histogram
 #+begin_src sh
   python3 plot_histogram.py \
 		  json-data/p003-src_lib_rs-one_hundred.json \
@@ -584,7 +1565,69 @@
 #+end_src
 ** src/point.rs
 *** test_point_distance
-**** command
+**** command_new_function
+***** command
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+	  "./new_function.sh src/point.rs && \
+	  warp test \
+	  src/point.rs test_point_distance \
+	  --public-store-metadata-path 	 /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "./new_function.sh src/point.rs && \
+  cargo test test_point_distance" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../org-data/p003-src_point_rs-test_point_distance==new-function.org \
+	  --export-json ../json-data/p003-src_point_rs-test_point_distance==new-function.json
+#+end_src
+***** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/p003-src_point_rs-test_point_distance.json \
+		  --labels warp,cargo \
+		  -o plots/plot_whisker_p003-src_point_rs-test_point_distance.png
+#+end_src
+***** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/p003-src_point_rs-test_point_distance.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_p003-src_point_rs-test_point_distance.png
+#+end_src
+
+**** command_modify_function
+***** command
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+  "./modify_function.sh 40 src/point.rs && \
+  warp test \
+  src/point.rs test_point_distance \
+  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "./modify_function.sh 40 src/point.rs && \
+  cargo test test_point_distance" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../org-data/p003-src_point_rs-test_point_distance==modify-function.org \
+	  --export-json ../json-data/p003-src_point_rs-test_point_distance==modify-function.json
+#+end_src
+***** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/p003-src_point_rs-test_point_distance.json \
+		  --labels warp,cargo \
+		  -o plots/plot_whisker_p003-src_point_rs-test_point_distance.png
+#+end_src
+***** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/p003-src_point_rs-test_point_distance.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_p003-src_point_rs-test_point_distance.png
+#+end_src
+**** command_comment
+***** command
 #+begin_src sh
   hyperfine \
 	  --command-name warp \
@@ -599,14 +1642,14 @@
 	  --export-orgmode ../org-data/p003-src_point_rs-test_point_distance.org \
 	  --export-json ../json-data/p003-src_point_rs-test_point_distance.json
 #+end_src
-**** plot whisker
+***** plot whisker
 #+begin_src sh
   python3 plot_whisker.py \
 		  json-data/p003-src_point_rs-test_point_distance.json \
 		  --labels warp,cargo \
 		  -o plots/plot_whisker_p003-src_point_rs-test_point_distance.png
 #+end_src
-**** plot histogram
+***** plot histogram
 #+begin_src sh
   python3 plot_histogram.py \
 		  json-data/p003-src_point_rs-test_point_distance.json \
@@ -614,7 +1657,69 @@
 		  -o plots/plot_hist_p003-src_point_rs-test_point_distance.png
 #+end_src
 *** test_add
-**** command
+**** command_new_function
+***** command
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+	  "./new_function.sh src/point.rs && \
+	  warp test \
+	  src/point.rs test_add \
+	  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "./new_function.sh src/point.rs && \
+  cargo test test_add" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../org-data/p003-src_point_rs-test_add==new-function.org \
+	  --export-json ../json-data/p003-src_point_rs-test_add==new-function.json
+#+end_src
+***** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/p003-src_point_rs-test_add.json \
+		  --labels warp,cargo \
+		  -o plots/plot_whisker_p003-src_point_rs-test_add.png
+#+end_src
+***** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/p003-src_point_rs-test_add.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_p003-src_point_rs-test_add.png
+#+end_src
+
+**** command_modify_function
+***** command
+#+begin_src sh
+  hyperfine \
+	  --command-name warp \
+	  "./modify_function.sh 34 src/point.rs && \
+  warp test \
+  src/point.rs test_add \
+  --public-store-metadata-path /Users/capitanu/repos/github.com/warp-build/warp/store" \
+	  --command-name cargo \
+	  "./modify_function.sh 34 src/point.rs && \
+  cargo test test_add" \
+	  --warmup 50 --runs 100 \
+	  --export-orgmode ../org-data/p003-src_point_rs-test_add==modify-function.org \
+	  --export-json ../json-data/p003-src_point_rs-test_add==modify-function.json
+#+end_src
+***** plot whisker
+#+begin_src sh
+  python3 plot_whisker.py \
+		  json-data/p003-src_point_rs-test_add.json \
+		  --labels warp,cargo \
+		  -o plots/plot_whisker_p003-src_point_rs-test_add.png
+#+end_src
+***** plot histogram
+#+begin_src sh
+  python3 plot_histogram.py \
+		  json-data/p003-src_point_rs-test_add.json \
+		  --labels warp,cargo --bins 100 --type barstacked \
+		  -o plots/plot_hist_p003-src_point_rs-test_add.png
+#+end_src
+**** command_comment
+***** command
 #+begin_src sh
   hyperfine \
 	  --command-name warp \
@@ -629,14 +1734,14 @@
 	  --export-orgmode ../org-data/p003-src_point_rs-test_add.org \
 	  --export-json ../json-data/p003-src_point_rs-test_add.json
 #+end_src
-**** plot whisker
+***** plot whisker
 #+begin_src sh
   python3 plot_whisker.py \
 		  json-data/p003-src_point_rs-test_add.json \
 		  --labels warp,cargo \
 		  -o plots/plot_whisker_p003-src_point_rs-test_add.png
 #+end_src
-**** plot histogram
+***** plot histogram
 #+begin_src sh
   python3 plot_histogram.py \
 		  json-data/p003-src_point_rs-test_add.json \
@@ -787,5 +1892,10 @@ hyperfine "echo '// test' >> library/core/tests/clone.rs && ./x.py test library/
 |---------+---------------+---------+---------+--------------|
 | =cargo= | 4.452 ± 0.034 |   4.383 |   4.505 | 23.54 ± 1.94 |
 | =warp=  | 0.189 ± 0.016 |   0.165 |   0.213 | 1.00         |
+
+
+
+
+
 
 

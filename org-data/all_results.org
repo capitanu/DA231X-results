@@ -1,0 +1,76 @@
+
+* Comment
+
+| Project <> Test                                        | Warp         |          | Cargo             |             |
+|                                                        | Mean [ms]    | Relative | Mean [ms]         | Relative    |
+|--------------------------------------------------------+--------------+----------+-------------------+-------------|
+| cargo <> over_the_limit                                | 141.2 ± 26.6 |     1.00 | 252.4 ± 16.1273.4 | 1.79 ± 0.36 |
+| cargo <> under_the_limit                               | 142.0 ± 7.5  |     1.00 | 246.7 ± 6.7       | 1.74 ± 0.10 |
+| embedded_hal <> cmp_id                                 | 262.6 ± 26.1 |     1.00 | 309.0 ± 18.1      | 1.18 ± 0.14 |
+| embedded_hal <> extended_id_new_out_of_range           | 266.0 ± 15.8 |     1.00 | 309.7 ± 17.2      | 1.16 ± 0.09 |
+| embedded_hal <> extended_id_new_unchecked_out_of_range | 281.6 ± 32.0 |     1.00 | 307.5 ± 19.1      | 1.09 ± 0.14 |
+| embedded_hal <> get_standard_id_from_extended_id       | 273.3 ± 24.3 |     1.00 | 309.1 ± 16.2      | 1.13 ± 0.12 |
+| embedded_hal <> standard_id_new_out_of_range           | 269.5 ± 21.9 |     1.00 | 311.4 ± 21.0      | 1.16 ± 0.12 |
+| embedded_hal <> standard_id_new_unchecked_out_of_range | 282.1 ± 27.9 |     1.00 | 305.0 ± 17.3      | 1.08 ± 0.12 |
+| point_test <> add_three_and_two                        | 175.9 ± 2.8  |     1.00 | 264.5 ± 18.3      | 1.50 ± 0.11 |
+| point_test <> add_two_and_two                          | 205.9 ± 5.0  |     1.00 | 286.9 ± 11.0      | 1.39 ± 0.06 |
+| point_test <> one_hundred                              | 179.5 ± 24.9 |     1.00 | 260.8 ± 20.4      | 1.45 ± 0.23 |
+| point_test <> test_add                                 | 116.6 ± 3.6  |     1.00 | 271.1 ± 13.6      | 2.33 ± 0.14 |
+| point_test <> test_point_distance                      | 119.6 ± 14.4 |     1.00 | 271.8 ± 11.7      | 2.27 ± 0.29 |
+| rust_cmd_lib <> test_proc_var_map                      | 295.8 ± 44.0 |     1.00 | 807.8 ± 48.5      | 2.73 ± 0.44 |
+| rust_cmd_lib <> test_proc_var_u32                      | 285.2 ± 41.7 |     1.00 | 805.4 ± 36.2      | 2.82 ± 0.43 |
+| rust_cmd_lib <> test_proc_var_vec                      | 303.4 ± 40.6 |     1.00 | 802.3 ± 21.9      | 2.64 ± 0.36 |
+| rust_ansi_term <> colour_deserialization               | 189.3 ± 19.8 |     1.00 | 487.0 ± 11.3      | 2.57 ± 0.28 |
+| rust_ansi_term <> style_serialization                  | 278.0 ± 40.8 |     1.00 | 486.7 ± 15.0      | 1.75 ± 0.26 |
+| rust_ansi_term <> colour_serialization                 | 191.8 ± 16.0 |     1.00 | 483.7 ± 14.1      | 2.52 ± 0.22 |
+
+
+* Modify function
+
+| Project <> Test                                        | Warp         |          | Cargo           |               |
+|                                                        | Mean [ms]    | Relative | Mean [ms]       | Relative      |
+|--------------------------------------------------------+--------------+----------+-----------------+---------------|
+| cargo <> over_the_limit                                | 124.7 ± 4.1  |     1.00 | 9308.6 ± 1141.4 | 74.66 ± 9.48  |
+| cargo <> under_the_limit                               | 231.1 ± 60.7 |     1.00 | 8594.8 ± 616.0  | 37.19 ± 10.12 |
+| embedded_hal <> cmp_id                                 | 259.4 ± 3.6  |     1.00 | 528.6 ± 99.4    | 2.04 ± 0.38   |
+| embedded_hal <> extended_id_new_out_of_range           | 257.0 ± 5.0  |     1.00 | 520.9 ± 101.5   | 2.03 ± 0.40   |
+| embedded_hal <> extended_id_new_unchecked_out_of_range | 258.3 ± 3.8  |     1.00 | 387.3 ± 83.1    | 1.50 ± 0.32   |
+| embedded_hal <> get_standard_id_from_extended_id       | 261.8 ± 4.5  |     1.00 | 518.2 ± 88.0    | 1.98 ± 0.34   |
+| embedded_hal <> standard_id_new_out_of_range           | 467.7 ± 11.7 |     1.00 | 1127.5 ± 373.8  | 2.41 ± 0.80   |
+| embedded_hal <> standard_id_new_unchecked_out_of_range | 472.4 ± 11.0 |     1.00 | 533.3 ± 115.2   | 1.13 ± 0.25   |
+| point_test <> add_three_and_two                        | 28.6 ± 2.8   |     1.00 | 504.8 ± 133.9   | 17.66 ± 4.99  |
+| point_test <> add_two_and_two                          | 30.2 ± 2.4   |     1.00 | 490.1 ± 107.3   | 16.25 ± 3.79  |
+| point_test <> one_hundred                              | 30.3 ± 2.5   |     1.00 | 379.6 ± 74.1    | 12.54 ± 2.65  |
+| point_test <> test_add                                 | 230.0 ± 8.8  |     1.00 | 519.1 ± 110.1   | 2.26 ± 0.49   |
+| point_test <> test_point_distance                      | 222.3 ± 8.4  |     1.00 | 496.3 ± 105.0   | 2.23 ± 0.48   |
+| rust_cmd_lib <> test_proc_var_map                      | 207.3 ± 12.0 |     1.00 | 1720.3 ± 224.7  | 8.30 ± 1.19   |
+| rust_cmd_lib <> test_proc_var_u32                      | 331.0 ± 19.5 |     1.00 | 1698.3 ± 220.0  | 5.13 ± 0.73   |
+| rust_cmd_lib <> test_proc_var_vec                      | 203.9 ± 19.5 |     1.00 | 1083.8 ± 148.4  | 5.31 ± 0.89   |
+| rust_ansi_term <> colour_deserialization               | 456.2 ± 4.1  |     1.00 | 1634.7 ± 413.0  | 3.58 ± 0.91   |
+| rust_ansi_term <> style_serialization                  | 456.5 ± 4.8  |     1.00 | 1588.3 ± 394.3  | 3.48 ± 0.86   |
+| rust_ansi_term <> colour_serialization                 | 458.5 ± 4.3  |     1.00 | 1539.8 ± 301.5  | 3.36 ± 0.66   |
+
+* New function
+
+| Project <> Test                                        | Warp         |             | Cargo          |              |
+|                                                        | Mean [ms]    |    Relative | Mean [ms]      | Relative     |
+|--------------------------------------------------------+--------------+-------------+----------------+--------------|
+| cargo <> over_the_limit                                | 187.5 ± 6.0  |        1.00 | 8050.0 ± 311.0 | 42.94 ± 2.15 |
+| cargo <> under_the_limit                               | 211.9 ± 6.0  |        1.00 | 8042.9 ± 267.3 | 37.95 ± 1.65 |
+| embedded_hal <> cmp_id                                 | 468.9 ± 8.4  | 1.27 ± 0.24 | 368.6 ± 70.3   | 1.00         |
+| embedded_hal <> extended_id_new_out_of_range           | 463.8 ± 11.7 | 1.20 ± 0.26 | 388.0 ± 84.1   | 1.00         |
+| embedded_hal <> extended_id_new_unchecked_out_of_range | 465.9 ± 6.1  | 1.20 ± 0.27 | 388.7 ± 88.7   | 1.00         |
+| embedded_hal <> get_standard_id_from_extended_id       | 466.0 ± 5.8  | 1.24 ± 0.23 | 375.5 ± 70.6   | 1.00         |
+| embedded_hal <> standard_id_new_out_of_range           | 465.4 ± 5.3  | 1.25 ± 0.23 | 372.9 ± 68.9   | 1.00         |
+| embedded_hal <> standard_id_new_unchecked_out_of_range | 468.9 ± 6.9  | 1.19 ± 0.23 | 393.0 ± 76.5   | 1.00         |
+| point_test <> add_three_and_two                        | 23.6 ± 2.0   |        1.00 | 360.3 ± 86.3   | 15.25 ± 3.88 |
+| point_test <> add_two_and_two                          | 24.4 ± 2.4   |        1.00 | 357.7 ± 77.1   | 14.69 ± 3.49 |
+| point_test <> one_hundred                              | 24.1 ± 1.8   |        1.00 | 351.4 ± 68.4   | 14.59 ± 3.04 |
+| point_test <> test_add                                 | 228.5 ± 6.1  |        1.00 | 365.5 ± 72.1   | 1.60 ± 0.32  |
+| point_test <> test_point_distance                      | 203.6 ± 9.6  |        1.00 | 367.8 ± 85.6   | 1.81 ± 0.43  |
+| rust_cmd_lib <> test_proc_var_map                      | 338.2 ± 6.6  |        1.00 | 938.2 ± 111.3  | 2.77 ± 0.33  |
+| rust_cmd_lib <> test_proc_var_u32                      | 550.7 ± 8.1  |        1.00 | 934.0 ± 124.5  | 1.70 ± 0.23  |
+| rust_cmd_lib <> test_proc_var_vec                      | 333.0 ± 5.7  |        1.00 | 933.5 ± 122.7  | 2.80 ± 0.37  |
+| rust_ansi_term <> colour_deserialization               | 462.1 ± 7.9  |        1.00 | 517.4 ± 50.4   | 1.12 ± 0.11  |
+| rust_ansi_term <> style_serialization                  | 462.0 ± 6.8  |        1.00 | 515.6 ± 45.7   | 1.12 ± 0.10  |
+| rust_ansi_term <> colour_serialization                 | 459.9 ± 7.8  |        1.00 | 518.4 ± 42.4   | 1.13 ± 0.09  |

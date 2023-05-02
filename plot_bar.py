@@ -7,6 +7,8 @@ import numpy as np
 dir_path = "./json-data/"
 files = os.listdir(dir_path)
 
+tp = '==new-function'
+
 
 names = [
     ("rust_ansi_term", "Rust Ansi Term"),
@@ -22,8 +24,8 @@ for (project_name, display_name) in names:
     tests = []
 
     for f in files:
-        if project_name in f:
-            tests.append(f.split('-')[-1].split(".json")[0])
+        if project_name in f and tp in f:
+            tests.append(f.split('-')[-1].split(tp + ".json")[0])
             f = dir_path + f
             with open(f) as f1:
                 data1 = json.load(f1)
@@ -43,4 +45,4 @@ for (project_name, display_name) in names:
     ax.set_xticklabels(tests, rotation=45, ha='right')
     ax.legend()
     
-    plt.savefig("plots/" + project_name + ".png", dpi=300, format='png', bbox_inches='tight')
+    plt.savefig("plots/" + project_name + tp + ".png", dpi=300, format='png', bbox_inches='tight')
