@@ -1,0 +1,1 @@
+{"rustc":5075174800980901198,"features":"[]","target":1066438232531263988,"profile":3793555808705208603,"path":17523903030608720598,"deps":[],"local":[{"CheckDepInfo":{"dep_info":"debug/.fingerprint/p003-point-test-50850de41b684aad/dep-test-lib-p003-point-test"}}],"rustflags":["-Cinstrument-coverage"],"metadata":7797948686568424061,"config":2202906307356721367,"compile_kind":0}

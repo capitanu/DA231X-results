@@ -7,7 +7,7 @@ import numpy as np
 dir_path = "./json-data/"
 files = os.listdir(dir_path)
 
-tp = '==new-function'
+tp = '==modify-function'
 
 
 names = [
@@ -25,7 +25,7 @@ for (project_name, display_name) in names:
 
     for f in files:
         if project_name in f and tp in f:
-            tests.append(f.split('-')[-1].split(tp + ".json")[0])
+            tests.append(f.split(tp + ".json")[0].split('-')[-1])
             f = dir_path + f
             with open(f) as f1:
                 data1 = json.load(f1)
