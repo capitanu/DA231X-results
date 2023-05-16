@@ -11,10 +11,6 @@ tp = '==modify-function'
 
 
 names = [
-    ("rust_ansi_term", "Rust Ansi Term"),
-    ("rust_cmd_lib", "Rust Cmd Lib"),
-    ("cargo", "Cargo"),
-    ("p003", "p003 Point Test"),
     ("embedded_hal", "Embedded HAL")
 ]
 

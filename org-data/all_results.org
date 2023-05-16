@@ -19,6 +19,26 @@
 | rust_ansi_term <> style_serialization                  | [ "Style", "style_serialization" ]                                 | [ "serde_json", "Style", "style_serialization" ]                           |    66.6% |
 | rust_ansi_term <> colour_serialization                 | [ "Color", "colour_serialization" ]                                | [ "serde_json", "Color", "colour_serialization" ]                          |    66.6% |
 
+
+| Project <> Test                                        | Warp-found symbol dependencies                                     | Accuracy |
+|--------------------------------------------------------+--------------------------------------------------------------------+----------|
+| cargo <> over_the_limit                                | [ "LimitErrorReader", "Vec", "over_the_limit" ]                    |     100% |
+| cargo <> under_the_limit                               | [ "LimitErrorReader", "Vec", "core", "under_the_limit" ]           |     100% |
+| embedded_hal <> cmp_id                                 | [ "ExtendedId", "Id", "StandardId", "cmp_id", "core" ]             |     100% |
+| embedded_hal <> extended_id_new_out_of_range           | [ "ExtendedId", "core", "extended_id_new_out_of_range" ]           |     100% |
+| embedded_hal <> extended_id_new_unchecked_out_of_range | [ "ExtendedId", "core", "extended_id_new_unchecked_out_of_range" ] |     100% |
+| embedded_hal <> get_standard_id_from_extended_id       | [ "StandardId", "core", "get_standard_id_from_extended_id" ]       |      75% |
+| embedded_hal <> standard_id_new_out_of_range           | [ "StandardId", "core", "standard_id_new_out_of_range" ]           |     100% |
+| embedded_hal <> standard_id_new_unchecked_out_of_range | [ "StandardId", "core", "standard_id_new_unchecked_out_of_range" ] |     100% |
+| rust_cmd_lib <> test_proc_var_map                      | [ "HashMap", "MAP", "core", "std", "test_proc_var_map" ]           |     100% |
+| rust_cmd_lib <> test_proc_var_u32                      | [ "LEN", "core", "std", "test_proc_var_u32" ]                      |     100% |
+| rust_cmd_lib <> test_proc_var_vec                      | [ "V", "alloc", "core", "std", "test_proc_var_vec" ]               |     100% |
+| rust_ansi_term <> colour_deserialization               | [ "Colour", "colour_deserialization", "serde_json" ]               |     100% |
+| rust_ansi_term <> style_serialization                  | [ "Style", "style_serialization" ]                                 |    66.6% |
+| rust_ansi_term <> colour_serialization                 | [ "Color", "colour_serialization" ]                                |    66.6% |
+
+* 
+
 * RQ2
 ** Comment
 
@@ -79,3 +99,4 @@
 | rust_ansi_term <> colour_deserialization               | 462.1 ± 7.9  | 517.4 ± 50.4   | 1.12 ± 0.11  |
 | rust_ansi_term <> style_serialization                  | 462.0 ± 6.8  | 515.6 ± 45.7   | 1.12 ± 0.10  |
 | rust_ansi_term <> colour_serialization                 | 459.9 ± 7.8  | 518.4 ± 42.4   | 1.13 ± 0.09  |
+

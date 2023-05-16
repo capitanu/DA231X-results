@@ -21,6 +21,7 @@ mod tests {
     #[test]
     fn one_hundred() {
         assert_eq!(102, add_two(100));
+		let x = 1;
     }
 }
 

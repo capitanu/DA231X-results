@@ -1,0 +1,1 @@
+/Users/capitanu/repos/github.com/warp-build/DA231X-results/p003-point-test/target/debug/libp003_point_test.rlib: /Users/capitanu/repos/github.com/warp-build/DA231X-results/p003-point-test/src/lib.rs /Users/capitanu/repos/github.com/warp-build/DA231X-results/p003-point-test/src/point.rs
